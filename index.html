@@ -3,163 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DJ Tomi</title>
-
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background: #0d0d0d;
-    color: white;
-    scroll-behavior: smooth;
-}
-
-header {
-    background: #111;
-    padding: 20px;
-    text-align: center;
-    border-bottom: 2px solid orange;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-header h1 {
-    color: orange;
-    margin-bottom: 10px;
-}
-
-nav a {
-    color: white;
-    margin: 15px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-nav a:hover {
-    color: orange;
-}
-
-.hero {
-    height: 100vh;
-    background:
-        linear-gradient(rgba(13,13,13,0.75), rgba(13,13,13,0.85)),
-        url('https://images.unsplash.com/photo-1571266028243-d220c9f4d5d3?auto=format&fit=crop&w=1600&q=80');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    animation: fadeIn 2s ease-in-out;
-    text-align: center;
-}
-
-.hero h2 {
-    font-size: 60px;
-    color: orange;
-    animation: slideDown 1.5s ease;
-}
-
-.hero p {
-    font-size: 22px;
-    margin-top: 20px;
-}
-
-section {
-    padding: 80px 20px;
-    text-align: center;
-}
-
-h2 {
-    color: orange;
-    margin-bottom: 20px;
-}
-
-.oferta-box {
-    background: #1a1a1a;
-    margin: 20px auto;
-    padding: 20px;
-    max-width: 400px;
-    border: 1px solid orange;
-    border-radius: 12px;
-    transition: transform 0.3s;
-}
-
-.oferta-box:hover {
-    transform: scale(1.05);
-}
-
-footer {
-    background: #111;
-    padding: 20px;
-    text-align: center;
-    border-top: 2px solid orange;
-}
-
-@keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity: 1;}
-}
-
-@keyframes slideDown {
-    from {
-        transform: translateY(-50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-</style>
+<title>DJ Tomasz</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-black text-white">
 
-<header>
-    <h1>DJ TOMI 🎧</h1>
-    <nav>
-        <a href="#start">Start</a>
-        <a href="#omnie">O mnie</a>
-        <a href="#oferta">Oferta</a>
-        <a href="#kontakt">Kontakt</a>
-    </nav>
-</header>
-
-<section class="hero" id="start">
-    <h2>DJ TOMI</h2>
-    <p>Profesjonalna oprawa muzyczna imprez</p>
+<section class="text-center py-20">
+<h1 class="text-5xl font-bold text-orange-500">DJ NA IMPREZY 🔥</h1>
+<p class="mt-4 text-gray-300">Wesela • 18-stki • Eventy • Kluby</p>
 </section>
 
-<section id="omnie">
-    <h2>O mnie</h2>
-    <p>Jestem DJ-em specjalizującym się w weselach, eventach i imprezach okolicznościowych.</p>
+<section class="max-w-2xl mx-auto p-6">
+<h2 class="text-2xl text-orange-500 mb-4">Rezerwacja</h2>
+<form class="space-y-3">
+<input class="w-full p-2 bg-gray-900" placeholder="Imię">
+<input class="w-full p-2 bg-gray-900" placeholder="Email">
+<input class="w-full p-2 bg-gray-900" placeholder="Rodzaj imprezy">
+<input type="date" class="w-full p-2 bg-gray-900">
+<textarea class="w-full p-2 bg-gray-900" placeholder="Dodatkowe info"></textarea>
+<button class="w-full bg-orange-500 p-2 font-bold">Wyślij 🚀</button>
+</form>
 </section>
-
-<section id="oferta">
-    <h2>Oferta</h2>
-    <div class="oferta-box">🎵 Wesela</div>
-    <div class="oferta-box">🎉 Urodziny</div>
-    <div class="oferta-box">🏢 Eventy firmowe</div>
-</section>
-
-<section id="kontakt">
-    <h2>Kontakt</h2>
-    <p>Email: kontakt@djtomi.pl</p>
-    <p>Telefon: 123-456-789</p>
-</section>
-
-<footer>
-    <p>© 2026 DJ Tomi - Wszystkie prawa zastrzeżone</p>
-</footer>
 
 </body>
 </html>
