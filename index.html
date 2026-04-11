@@ -3,133 +3,178 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DjTomi - Oprawa muzyczna</title>
+<title>DjTomi</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
   body {
-    transition: all 0.3s ease;
+    margin: 0;
+    background: #0a0a0a;
+    color: white;
+  }
+
+  .bg-glow {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at top, rgba(255,140,0,0.12), transparent 55%);
+    z-index: -1;
+  }
+
+  .fade {
+    animation: fadeIn 0.7s ease;
+  }
+
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(12px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+
+  /* MENU */
+  .menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 220px;
+    height: 100vh;
+    background: rgba(10,10,10,0.97);
+    border-left: 1px solid #222;
+    transform: translateX(100%);
+    transition: 0.3s;
+    padding: 20px;
+  }
+
+  .menu.open {
+    transform: translateX(0);
+  }
+
+  .btn {
+    display: block;
+    margin: 12px 0;
+    color: #bbb;
+    cursor: pointer;
+  }
+
+  .btn:hover {
+    color: orange;
+  }
+
+  .card {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 16px;
+    transition: 0.3s;
+  }
+
+  .card:hover {
+    border-color: rgba(255,140,0,0.5);
+    transform: translateY(-3px);
+  }
+
+  section {
+    padding: 60px 20px;
   }
 </style>
 </head>
 
-<body id="body" class="bg-black text-white">
+<body>
 
-<!-- TOP BAR -->
-<header class="flex justify-between items-center p-5 border-b border-gray-700">
-  <h1 class="text-2xl font-bold text-orange-500">DjTomi 🎧</h1>
+<div class="bg-glow"></div>
 
-  <button onclick="toggleTheme()" class="px-4 py-2 rounded bg-gray-800 hover:bg-gray-700">
-    Zmień motyw 🌗
-  </button>
-</header>
+<!-- MENU -->
+<button onclick="toggleMenu()" class="fixed top-5 right-5 text-3xl z-50">
+  ☰
+</button>
+
+<div id="menu" class="menu">
+
+  <h2 class="text-orange-500 font-bold mb-6">DjTomi 🎧</h2>
+
+  <div class="btn" onclick="go('about')">O mnie</div>
+  <div class="btn" onclick="go('services')">Usługi</div>
+  <div class="btn" onclick="go('price')">Cennik</div>
+  <div class="btn" onclick="go('contact')">Kontakt</div>
+
+</div>
 
 <!-- HERO -->
-<section class="text-center py-16 px-4">
-  <h2 class="text-4xl font-bold text-orange-500">Oprawa muzyczna imprez</h2>
-  <p class="text-gray-400 mt-3">Połowinki • Urodziny • Imprezy rodzinne • Dyskoteki szkolne</p>
+<section class="text-center fade pt-24">
+  <h1 class="text-6xl font-bold text-orange-500">DjTomi</h1>
+  <p class="text-gray-400 mt-4 max-w-xl mx-auto">
+    Profesjonalna oprawa muzyczna imprez — połowinki, urodziny, eventy rodzinne i szkolne.
+  </p>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="max-w-3xl mx-auto fade">
+  <h2 class="text-3xl text-orange-500 font-bold mb-3">O mnie</h2>
+  <p class="text-gray-300">
+    Po ukończeniu szkoły chóralnej zostałem przy muzyce i zacząłem miksować.
+    Gram wszystkie style — od klasycznych hitów po klubowe brzmienia.
+  </p>
 </section>
 
 <!-- SERVICES -->
-<section class="max-w-4xl mx-auto grid md:grid-cols-2 gap-6 p-6">
+<section id="services" class="max-w-5xl mx-auto fade">
 
-  <div class="p-5 rounded bg-gray-900 shadow">
-    <h3 class="text-xl font-bold text-orange-400">🎓 Połowinki</h3>
-    <p class="text-gray-300 mt-2">Profesjonalna muzyka i prowadzenie imprezy szkolnej.</p>
-  </div>
+  <h2 class="text-3xl text-orange-500 font-bold mb-6 text-center">Usługi</h2>
 
-  <div class="p-5 rounded bg-gray-900 shadow">
-    <h3 class="text-xl font-bold text-orange-400">🎉 Urodziny</h3>
-    <p class="text-gray-300 mt-2">Energia, zabawy i najlepsze hity.</p>
-  </div>
+  <div class="grid md:grid-cols-2 gap-4">
 
-  <div class="p-5 rounded bg-gray-900 shadow">
-    <h3 class="text-xl font-bold text-orange-400">👨‍👩‍👧‍👦 Imprezy rodzinne</h3>
-    <p class="text-gray-300 mt-2">Muzyka dopasowana do każdego pokolenia.</p>
-  </div>
+    <div class="card">🎓 Połowinki — szkoły i młodzież</div>
+    <div class="card">🎉 Urodziny — dopasowana muzyka</div>
+    <div class="card">👨‍👩‍👧‍👦 Rodzinne — każdy wiek</div>
+    <div class="card">🏫 Szkolne — prowadzenie + muzyka</div>
 
-  <div class="p-5 rounded bg-gray-900 shadow">
-    <h3 class="text-xl font-bold text-orange-400">🏫 Dyskoteki szkolne</h3>
-    <p class="text-gray-300 mt-2">Nowoczesne sety i prowadzenie imprezy.</p>
   </div>
 
 </section>
 
-<!-- FORM -->
-<section class="max-w-2xl mx-auto p-6 mt-10 rounded bg-gray-900">
+<!-- PRICE -->
+<section id="price" class="text-center fade max-w-2xl mx-auto">
 
-  <h2 class="text-2xl font-bold text-orange-500 mb-4">📩 Formularz zapisów</h2>
+  <h2 class="text-3xl text-orange-500 font-bold mb-3">Cennik</h2>
 
-  <form id="form" class="space-y-3">
+  <p class="text-xl font-bold">120 zł / godzina</p>
+  <p class="text-gray-400 mt-2">
+    Wycena indywidualna w zależności od wydarzenia.
+  </p>
 
-    <input class="w-full p-3 rounded bg-black border border-gray-700" placeholder="Imię i nazwisko" required>
+</section>
 
-    <input class="w-full p-3 rounded bg-black border border-gray-700" placeholder="Email" required>
+<!-- CONTACT -->
+<section id="contact" class="max-w-md mx-auto text-center fade">
 
-    <select class="w-full p-3 rounded bg-black border border-gray-700">
-      <option>Wybierz rodzaj imprezy</option>
-      <option>Połowinki</option>
-      <option>Urodziny</option>
-      <option>Impreza rodzinna</option>
-      <option>Dyskoteka szkolna</option>
-    </select>
+  <h2 class="text-3xl text-orange-500 font-bold mb-4">Kontakt</h2>
 
-    <input type="date" class="w-full p-3 rounded bg-black border border-gray-700">
+  <form class="space-y-3">
 
-    <textarea class="w-full p-3 rounded bg-black border border-gray-700" placeholder="Dodatkowe informacje"></textarea>
+    <input class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Imię">
 
-    <button class="w-full bg-orange-500 hover:bg-orange-600 p-3 font-bold rounded">
-      Wyślij zapytanie 🚀
+    <input class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Email">
+
+    <textarea class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Wiadomość"></textarea>
+
+    <button class="w-full bg-orange-500 p-3 rounded font-bold">
+      Wyślij
     </button>
-
-    <p id="msg" class="text-green-400 text-center hidden">Wysłano! Odezwę się 🎧</p>
 
   </form>
 
 </section>
 
-<!-- FOOTER -->
-<footer class="text-center p-6 text-gray-500 mt-10">
-  DjTomi © 2026 - Oprawa muzyczna imprez
-</footer>
-
 <script>
-  const body = document.getElementById("body");
-  const form = document.getElementById("form");
-  const msg = document.getElementById("msg");
+  const menu = document.getElementById("menu");
 
-  // THEME TOGGLE
-  function toggleTheme() {
-    if (body.classList.contains("bg-black")) {
-      body.classList.remove("bg-black", "text-white");
-      body.classList.add("bg-white", "text-black");
-      localStorage.setItem("theme", "light");
-    } else {
-      body.classList.add("bg-black", "text-white");
-      body.classList.remove("bg-white", "text-black");
-      localStorage.setItem("theme", "dark");
-    }
+  function toggleMenu() {
+    menu.classList.toggle("open");
   }
 
-  // LOAD THEME
-  window.onload = () => {
-    const theme = localStorage.getItem("theme");
-    if (theme === "light") {
-      body.classList.remove("bg-black", "text-white");
-      body.classList.add("bg-white", "text-black");
-    }
-  };
-
-  // FORM SUBMIT
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
-    msg.classList.remove("hidden");
-
-    setTimeout(() => {
-      msg.classList.add("hidden");
-      form.reset();
-    }, 3000);
-  });
+  function go(id) {
+    document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+    menu.classList.remove("open");
+  }
 </script>
 
 </body>
