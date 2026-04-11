@@ -47,12 +47,19 @@ nav a:hover {
 
 .hero {
     height: 100vh;
-    background: linear-gradient(to right, #0d0d0d, #1a1a1a);
+    background:
+        linear-gradient(rgba(13,13,13,0.75), rgba(13,13,13,0.85)),
+        url('https://images.unsplash.com/photo-1571266028243-d220c9f4d5d3?auto=format&fit=crop&w=1600&q=80');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     animation: fadeIn 2s ease-in-out;
+    text-align: center;
 }
 
 .hero h2 {
