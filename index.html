@@ -3,27 +3,134 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DJ Tomasz</title>
+<title>DjTomi - Oprawa muzyczna</title>
 <script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  body {
+    transition: all 0.3s ease;
+  }
+</style>
 </head>
-<body class="bg-black text-white">
 
-<section class="text-center py-20">
-<h1 class="text-5xl font-bold text-orange-500">DJ NA IMPREZY 🔥</h1>
-<p class="mt-4 text-gray-300">Wesela • 18-stki • Eventy • Kluby</p>
+<body id="body" class="bg-black text-white">
+
+<!-- TOP BAR -->
+<header class="flex justify-between items-center p-5 border-b border-gray-700">
+  <h1 class="text-2xl font-bold text-orange-500">DjTomi 🎧</h1>
+
+  <button onclick="toggleTheme()" class="px-4 py-2 rounded bg-gray-800 hover:bg-gray-700">
+    Zmień motyw 🌗
+  </button>
+</header>
+
+<!-- HERO -->
+<section class="text-center py-16 px-4">
+  <h2 class="text-4xl font-bold text-orange-500">Oprawa muzyczna imprez</h2>
+  <p class="text-gray-400 mt-3">Połowinki • Urodziny • Imprezy rodzinne • Dyskoteki szkolne</p>
 </section>
 
-<section class="max-w-2xl mx-auto p-6">
-<h2 class="text-2xl text-orange-500 mb-4">Rezerwacja</h2>
-<form class="space-y-3">
-<input class="w-full p-2 bg-gray-900" placeholder="Imię">
-<input class="w-full p-2 bg-gray-900" placeholder="Email">
-<input class="w-full p-2 bg-gray-900" placeholder="Rodzaj imprezy">
-<input type="date" class="w-full p-2 bg-gray-900">
-<textarea class="w-full p-2 bg-gray-900" placeholder="Dodatkowe info"></textarea>
-<button class="w-full bg-orange-500 p-2 font-bold">Wyślij 🚀</button>
-</form>
+<!-- SERVICES -->
+<section class="max-w-4xl mx-auto grid md:grid-cols-2 gap-6 p-6">
+
+  <div class="p-5 rounded bg-gray-900 shadow">
+    <h3 class="text-xl font-bold text-orange-400">🎓 Połowinki</h3>
+    <p class="text-gray-300 mt-2">Profesjonalna muzyka i prowadzenie imprezy szkolnej.</p>
+  </div>
+
+  <div class="p-5 rounded bg-gray-900 shadow">
+    <h3 class="text-xl font-bold text-orange-400">🎉 Urodziny</h3>
+    <p class="text-gray-300 mt-2">Energia, zabawy i najlepsze hity.</p>
+  </div>
+
+  <div class="p-5 rounded bg-gray-900 shadow">
+    <h3 class="text-xl font-bold text-orange-400">👨‍👩‍👧‍👦 Imprezy rodzinne</h3>
+    <p class="text-gray-300 mt-2">Muzyka dopasowana do każdego pokolenia.</p>
+  </div>
+
+  <div class="p-5 rounded bg-gray-900 shadow">
+    <h3 class="text-xl font-bold text-orange-400">🏫 Dyskoteki szkolne</h3>
+    <p class="text-gray-300 mt-2">Nowoczesne sety i prowadzenie imprezy.</p>
+  </div>
+
 </section>
+
+<!-- FORM -->
+<section class="max-w-2xl mx-auto p-6 mt-10 rounded bg-gray-900">
+
+  <h2 class="text-2xl font-bold text-orange-500 mb-4">📩 Formularz zapisów</h2>
+
+  <form id="form" class="space-y-3">
+
+    <input class="w-full p-3 rounded bg-black border border-gray-700" placeholder="Imię i nazwisko" required>
+
+    <input class="w-full p-3 rounded bg-black border border-gray-700" placeholder="Email" required>
+
+    <select class="w-full p-3 rounded bg-black border border-gray-700">
+      <option>Wybierz rodzaj imprezy</option>
+      <option>Połowinki</option>
+      <option>Urodziny</option>
+      <option>Impreza rodzinna</option>
+      <option>Dyskoteka szkolna</option>
+    </select>
+
+    <input type="date" class="w-full p-3 rounded bg-black border border-gray-700">
+
+    <textarea class="w-full p-3 rounded bg-black border border-gray-700" placeholder="Dodatkowe informacje"></textarea>
+
+    <button class="w-full bg-orange-500 hover:bg-orange-600 p-3 font-bold rounded">
+      Wyślij zapytanie 🚀
+    </button>
+
+    <p id="msg" class="text-green-400 text-center hidden">Wysłano! Odezwę się 🎧</p>
+
+  </form>
+
+</section>
+
+<!-- FOOTER -->
+<footer class="text-center p-6 text-gray-500 mt-10">
+  DjTomi © 2026 - Oprawa muzyczna imprez
+</footer>
+
+<script>
+  const body = document.getElementById("body");
+  const form = document.getElementById("form");
+  const msg = document.getElementById("msg");
+
+  // THEME TOGGLE
+  function toggleTheme() {
+    if (body.classList.contains("bg-black")) {
+      body.classList.remove("bg-black", "text-white");
+      body.classList.add("bg-white", "text-black");
+      localStorage.setItem("theme", "light");
+    } else {
+      body.classList.add("bg-black", "text-white");
+      body.classList.remove("bg-white", "text-black");
+      localStorage.setItem("theme", "dark");
+    }
+  }
+
+  // LOAD THEME
+  window.onload = () => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "light") {
+      body.classList.remove("bg-black", "text-white");
+      body.classList.add("bg-white", "text-black");
+    }
+  };
+
+  // FORM SUBMIT
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    msg.classList.remove("hidden");
+
+    setTimeout(() => {
+      msg.classList.add("hidden");
+      form.reset();
+    }, 3000);
+  });
+</script>
 
 </body>
 </html>
