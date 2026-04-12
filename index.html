@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DjTomi</title>
+<title>DjTomi PARTY MODE</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
 <style>
 body {
@@ -16,199 +15,140 @@ body {
   font-family: Arial, sans-serif;
 }
 
-.bg-glow {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at top, rgba(255,140,0,0.12), transparent 55%);
-  z-index: -1;
-}
-
-/* MENU */
-.menu {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 220px;
-  height: 100vh;
-  background: rgba(10,10,10,0.97);
-  border-left: 1px solid #222;
-  transform: translateX(100%);
-  transition: 0.3s;
-  padding: 20px;
-  z-index: 40;
-}
-
-.menu.open { transform: translateX(0); }
-
-.btn {
-  display: block;
-  margin: 12px 0;
-  color: #bbb;
-  cursor: pointer;
-}
-
-.btn:hover { color: orange; }
-
-/* SEKCJE */
-section { padding: 60px 20px; }
-
-.card {
-  background: #111;
-  border: 1px solid #222;
-  border-radius: 12px;
-  padding: 16px;
-}
-
-/* PARTY MODE STROBE */
+/* COLOR STROBE */
 @keyframes strobe {
-  0% { background: black; }
-  25% { background: white; }
-  50% { background: black; }
-  75% { background: white; }
-  100% { background: black; }
+  0% { background: red; }
+  10% { background: blue; }
+  20% { background: lime; }
+  30% { background: purple; }
+  40% { background: yellow; }
+  50% { background: cyan; }
+  60% { background: hotpink; }
+  70% { background: orange; }
+  80% { background: white; }
+  90% { background: magenta; }
+  100% { background: red; }
 }
 
 .party-mode {
-  animation: strobe 0.15s infinite;
+  animation: strobe 0.2s infinite;
 }
 
-/* PARTY BUTTON */
+/* BUTTON */
 .party-btn {
   position: fixed;
   bottom: 20px;
   right: 20px;
   background: #e11d48;
-  color: white;
-  font-weight: bold;
-  padding: 12px 16px;
+  padding: 14px 18px;
   border-radius: 999px;
+  font-weight: bold;
   cursor: pointer;
   z-index: 100;
-  box-shadow: 0 0 20px rgba(225,29,72,0.6);
 }
 .party-btn:hover {
   background: #be123c;
+}
+
+/* MODAL */
+#warningBox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.modal {
+  background: #111;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 320px;
+}
+
+button {
+  margin: 5px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="bg-glow"></div>
+<h1 class="text-center mt-20 text-4xl text-orange-500 font-bold">
+DJ PARTY MODE
+</h1>
 
-<!-- MENU -->
-<button onclick="toggleMenu()" class="fixed top-5 right-5 text-3xl z-50">☰</button>
-
-<div id="menu" class="menu">
-  <h2 class="text-orange-500 font-bold mb-6">DjTomi 🎧</h2>
-  <div class="btn" onclick="go('about')">O mnie</div>
-  <div class="btn" onclick="go('services')">Usługi</div>
-  <div class="btn" onclick="go('contact')">Kontakt</div>
-  <div class="btn" onclick="openBooking()">📅 Rezerwacja</div>
-</div>
-
-<!-- HERO -->
-<section class="text-center pt-24">
-  <h1 class="text-6xl font-bold text-orange-500">DjTomi</h1>
-
-  <p class="text-gray-400 mt-4 max-w-xl mx-auto">
-    Profesjonalna oprawa muzyczna imprez — eventy, szkoły, urodziny.
-  </p>
-
-  <button onclick="openBooking()"
-    class="mt-8 bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-xl text-lg font-bold">
-    📅 Zarezerwuj termin
-  </button>
-</section>
-
-<!-- ABOUT -->
-<section id="about" class="max-w-3xl mx-auto text-center">
-  <h2 class="text-3xl text-orange-500 font-bold mb-4">O mnie</h2>
-  <p class="text-gray-300">
-    Po ukończeniu szkoły chóralnej wybrałem DJ-ing i gram na profesjonalnym sprzęcie.
-  </p>
-</section>
-
-<!-- SERVICES -->
-<section id="services" class="max-w-5xl mx-auto text-center">
-  <h2 class="text-3xl text-orange-500 font-bold mb-6">Usługi</h2>
-
-  <div class="grid md:grid-cols-2 gap-4">
-    <div class="card">🎓 Połowinki</div>
-    <div class="card">🎉 Urodziny</div>
-    <div class="card">👨‍👩‍👧‍👦 Imprezy rodzinne</div>
-    <div class="card">🏫 Eventy szkolne</div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contact" class="max-w-md mx-auto text-center">
-  <h2 class="text-3xl text-orange-500 font-bold mb-4">Kontakt</h2>
-
-  <form id="contact-form" class="space-y-3">
-    <input name="name" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Imię">
-    <input name="email" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Email">
-    <textarea name="message" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Wiadomość"></textarea>
-
-    <button class="w-full bg-orange-500 p-3 rounded font-bold">Wyślij</button>
-  </form>
-</section>
-
-<!-- AUDIO -->
-<audio id="partyAudio" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a9c2f7.mp3?filename=club-dance-11063.mp3" type="audio/mpeg">
+<!-- MUSIC -->
+<audio id="music" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/10/16/audio_3b1d1a5f6a.mp3?filename=tech-house-112194.mp3" type="audio/mpeg">
 </audio>
 
-<!-- PARTY BUTTON -->
-<div class="party-btn" onclick="toggleParty()" id="partyBtn">
+<!-- BUTTON -->
+<div class="party-btn" onclick="showWarning()">
 🎉 PARTY
+</div>
+
+<!-- WARNING MODAL -->
+<div id="warningBox">
+  <div class="modal">
+    <h2 class="text-red-500 font-bold text-xl mb-3">⚠️ Ostrzeżenie</h2>
+
+    <p class="text-gray-300 mb-4">
+      Efekt zawiera szybkie migające światła i może być nieodpowiedni dla osób z epilepsją lub nadwrażliwością na światło.
+    </p>
+
+    <p class="font-bold mb-3">Czy chcesz kontynuować?</p>
+
+    <button onclick="startParty()" class="bg-green-500 px-4 py-2 rounded">
+      TAK
+    </button>
+
+    <button onclick="closeWarning()" class="bg-red-500 px-4 py-2 rounded">
+      NIE
+    </button>
+  </div>
 </div>
 
 <script>
 
-// MENU
-const menu = document.getElementById("menu");
-
-function toggleMenu(){
-  menu.classList.toggle("open");
-}
-
-function go(id){
-  document.getElementById(id).scrollIntoView({behavior:"smooth"});
-  menu.classList.remove("open");
-}
-
-// REZERWACJA
-function openBooking(){
-  window.open("https://calendar.app.google/6WZpceQpuBKEJStF6", "_blank");
-}
-
-// PARTY MODE
 let partyOn = false;
-const audio = document.getElementById("partyAudio");
 
-function toggleParty(){
+const music = document.getElementById("music");
+const warningBox = document.getElementById("warningBox");
+
+function showWarning(){
+  warningBox.style.display = "flex";
+}
+
+function closeWarning(){
+  warningBox.style.display = "none";
+}
+
+function startParty(){
+
+  warningBox.style.display = "none";
+
   partyOn = !partyOn;
 
   if(partyOn){
-    audio.play();
+    music.play().catch(err => console.log(err));
+
     document.body.classList.add("party-mode");
-    document.getElementById("partyBtn").innerText = "⛔ STOP";
+
+    document.querySelector(".party-btn").innerText = "⛔ STOP PARTY";
+
   } else {
-    audio.pause();
-    audio.currentTime = 0;
+    music.pause();
+    music.currentTime = 0;
+
     document.body.classList.remove("party-mode");
-    document.getElementById("partyBtn").innerText = "🎉 PARTY";
+
+    document.querySelector(".party-btn").innerText = "🎉 PARTY";
   }
 }
-
-// EMAILJS
-emailjs.init("K-SLWWK5O79YX1-Gi");
-
-document.getElementById("contact-form").addEventListener("submit", e=>{
-  e.preventDefault();
-  emailjs.sendForm("service_fbue68f","template_fxzn7el",e.target);
-});
 
 </script>
 
