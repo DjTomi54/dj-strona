@@ -8,192 +8,168 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
 <style>
 body {
   margin: 0;
   background: #0a0a0a;
   color: white;
-  font-family: Arial, sans-serif;
-}
-
-.bg-glow {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at top, rgba(255,140,0,0.12), transparent 55%);
-  z-index: -1;
+  font-family: Arial;
 }
 
 .menu {
   position: fixed;
-  top: 0;
   right: 0;
+  top: 0;
   width: 220px;
   height: 100vh;
-  background: rgba(10,10,10,0.97);
-  border-left: 1px solid #222;
+  background: #111;
   transform: translateX(100%);
   transition: 0.3s;
   padding: 20px;
-  z-index: 40;
+  z-index: 50;
 }
 
-.menu.open {
-  transform: translateX(0);
-}
+.menu.open { transform: translateX(0); }
 
-.btn {
-  display: block;
-  margin: 12px 0;
-  color: #bbb;
-  cursor: pointer;
-}
-
+.btn { margin: 10px 0; cursor: pointer; color: #aaa; }
 .btn:hover { color: orange; }
 
 .card {
   background: #111;
+  padding: 15px;
+  border-radius: 10px;
   border: 1px solid #222;
-  border-radius: 12px;
-  padding: 16px;
 }
-
-section { padding: 50px 20px; }
 </style>
 </head>
 
 <body>
 
-<div class="bg-glow"></div>
-
 <!-- MENU -->
-<button onclick="toggleMenu()" class="fixed top-5 right-5 text-3xl z-50">☰</button>
+<button onclick="toggleMenu()" style="position:fixed;top:20px;right:20px;font-size:30px;z-index:100;">☰</button>
 
 <div id="menu" class="menu">
-  <h2 class="text-orange-500 font-bold mb-6">DjTomi 🎧</h2>
   <div class="btn" onclick="go('about')">O mnie</div>
   <div class="btn" onclick="go('services')">Usługi</div>
-  <div class="btn" onclick="go('price')">Cennik</div>
-  <div class="btn" onclick="openBooking()">Rezerwacja</div>
+  <div class="btn" onclick="go('gallery')">Galeria</div>
   <div class="btn" onclick="go('contact')">Kontakt</div>
 </div>
 
 <!-- HERO -->
 <section class="text-center pt-24">
-  <h1 class="text-6xl font-bold text-orange-500">DjTomi</h1>
-
-  <p class="text-gray-400 mt-4 max-w-xl mx-auto">
-    Profesjonalna oprawa muzyczna imprez — połowinki, urodziny, eventy rodzinne i szkolne.
-  </p>
-
-  <button onclick="openBooking()" class="mt-8 bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-xl text-lg font-bold">
-    📅 Zarezerwuj termin
-  </button>
+  <h1 style="font-size:60px;color:orange;">DjTomi</h1>
+  <p>DJ na imprezy • połowinki • urodziny • eventy</p>
 </section>
 
 <!-- ABOUT -->
-<section id="about" class="max-w-3xl mx-auto text-center">
-  <h2 class="text-3xl text-orange-500 font-bold mb-4">O mnie</h2>
-  <p class="text-gray-300">
-    Gram wszystkie style — od klasycznych hitów po klubowe brzmienia.
+<section id="about" class="text-center max-w-3xl mx-auto">
+  <h2 style="color:orange;">O mnie</h2>
+  <p>
+    Po ukończeniu szkoły chóralnej wybrałem DJ-ing i rozwijam się w tej branży.
+    Gram na profesjonalnym sprzęcie i stale podnoszę swoje umiejętności.
   </p>
 </section>
 
 <!-- SERVICES -->
-<section id="services" class="max-w-5xl mx-auto">
-  <h2 class="text-3xl text-orange-500 font-bold mb-6 text-center">Usługi</h2>
-
-  <div class="grid md:grid-cols-2 gap-4">
-    <div class="card">🎓 Połowinki</div>
-    <div class="card">🎉 Urodziny</div>
-    <div class="card">👨‍👩‍👧‍👦 Imprezy rodzinne</div>
-    <div class="card">🏫 Dyskoteki szkolne</div>
-  </div>
+<section id="services" class="text-center">
+  <h2 style="color:orange;">Usługi</h2>
+  <div class="card">🎉 Urodziny</div>
+  <div class="card">🎓 Połowinki</div>
+  <div class="card">👨‍👩‍👧‍👦 Imprezy rodzinne</div>
 </section>
 
-<!-- PRICE -->
-<section id="price" class="text-center max-w-2xl mx-auto">
-  <h2 class="text-3xl text-orange-500 font-bold mb-3">Cennik</h2>
-  <p class="text-xl font-bold">120 zł / godzina</p>
-</section>
+<!-- GALLERY -->
+<section id="gallery" class="text-center max-w-5xl mx-auto">
+  <h2 style="color:orange;">Galeria</h2>
 
-<!-- BOOKING -->
-<section class="text-center max-w-2xl mx-auto">
-  <h2 class="text-3xl text-orange-500 font-bold mb-4">Rezerwacja</h2>
-
-  <button onclick="openBooking()" class="bg-orange-500 px-8 py-4 rounded-xl font-bold hover:bg-orange-600">
-    📅 Otwórz kalendarz rezerwacji
+  <input type="file" id="fileInput">
+  <button onclick="uploadImage()" style="background:orange;padding:10px;border:none;">
+    Dodaj zdjęcie
   </button>
 
-  <p class="text-gray-400 mt-3 text-sm">
-    Wybierz wolny termin i zarezerwuj online
-  </p>
+  <div id="galleryGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;"></div>
 </section>
 
 <!-- CONTACT -->
-<section id="contact" class="max-w-md mx-auto text-center">
-  <h2 class="text-3xl text-orange-500 font-bold mb-4">Kontakt</h2>
+<section id="contact" class="text-center">
+  <h2 style="color:orange;">Kontakt</h2>
 
-  <form id="contact-form" class="space-y-3">
-
-    <input name="name" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Imię" required>
-
-    <input name="email" type="email" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Email" required>
-
-    <textarea name="message" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Wiadomość" required></textarea>
-
-    <button type="submit" class="w-full bg-orange-500 p-3 rounded font-bold hover:bg-orange-600">
-      Wyślij wiadomość
-    </button>
-
-    <p id="success-msg" class="text-green-400 hidden mt-2">Wiadomość wysłana!</p>
-    <p id="error-msg" class="text-red-400 hidden mt-2">Błąd wysyłki</p>
-
+  <form id="contact-form">
+    <input name="name" placeholder="Imię"><br>
+    <input name="email" placeholder="Email"><br>
+    <textarea name="message" placeholder="Wiadomość"></textarea><br>
+    <button type="submit">Wyślij</button>
   </form>
 </section>
 
 <script>
+// MENU
 const menu = document.getElementById("menu");
+function toggleMenu() { menu.classList.toggle("open"); }
+function go(id){ document.getElementById(id).scrollIntoView({behavior:"smooth"}); menu.classList.remove("open"); }
 
-function toggleMenu() {
-  menu.classList.toggle("open");
-}
-
-function go(id) {
-  document.getElementById(id).scrollIntoView({ behavior: "smooth" });
-  menu.classList.remove("open");
-}
-
-/* GOOGLE CALENDAR BOOKING */
-function openBooking() {
-  window.open("https://calendar.app.google/6WZpceQpuBKEJStF6", "_blank");
-}
-
-/* EMAILJS */
+// EMAILJS
 emailjs.init("K-SLWWK5O79YX1-Gi");
 
-const form = document.getElementById("contact-form");
-const successMsg = document.getElementById("success-msg");
-const errorMsg = document.getElementById("error-msg");
-
-form.addEventListener("submit", function(e){
+document.getElementById("contact-form").addEventListener("submit", e=>{
   e.preventDefault();
-
-  emailjs.sendForm(
-    "service_fbue68f",
-    "template_fxzn7el",
-    form
-  )
-  .then(() => {
-    successMsg.classList.remove("hidden");
-    errorMsg.classList.add("hidden");
-    form.reset();
-  })
-  .catch((error) => {
-    console.log(error);
-    errorMsg.classList.remove("hidden");
-    successMsg.classList.add("hidden");
-  });
+  emailjs.sendForm("service_fbue68f","template_fxzn7el",e.target);
 });
+
+// FIREBASE INIT
+firebase.initializeApp({
+  apiKey: "AIzaSyB3eOcBPbWkchmevevGIJzXn9xjf4a8KRo",
+  authDomain: "djtomi-gallery.firebaseapp.com",
+  projectId: "djtomi-gallery",
+  storageBucket: "djtomi-gallery.firebasestorage.app",
+  messagingSenderId: "811366816716",
+  appId: "1:811366816716:web:1ad24575bc788756515b69"
+});
+
+const db = firebase.firestore();
+const storage = firebase.storage();
+
+const galleryGrid = document.getElementById("galleryGrid");
+const fileInput = document.getElementById("fileInput");
+
+// LOAD IMAGES
+function loadImages(){
+  db.collection("gallery").orderBy("created","desc")
+  .onSnapshot(snap=>{
+    galleryGrid.innerHTML="";
+    snap.forEach(doc=>{
+      const d = doc.data();
+      galleryGrid.innerHTML += `
+        <img src="${d.url}" style="width:100%;height:200px;object-fit:cover;cursor:pointer"
+        onclick="window.open('${d.url}','_blank')">
+      `;
+    });
+  });
+}
+loadImages();
+
+// UPLOAD IMAGE
+function uploadImage(){
+  const file = fileInput.files[0];
+  if(!file) return alert("Wybierz zdjęcie!");
+
+  const ref = storage.ref("gallery/" + Date.now() + file.name);
+
+  ref.put(file).then(()=>{
+    ref.getDownloadURL().then(url=>{
+      db.collection("gallery").add({
+        url:url,
+        created:Date.now()
+      });
+      fileInput.value="";
+    });
+  });
+}
 </script>
 
 </body>
