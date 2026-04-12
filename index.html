@@ -57,7 +57,7 @@ section { padding: 60px 20px; }
   padding: 16px;
 }
 
-/* PARTY EFFECT */
+/* PARTY LIGHTS */
 @keyframes strobe {
   0% { background: red; }
   20% { background: blue; }
@@ -84,13 +84,23 @@ section { padding: 60px 20px; }
   z-index: 100;
 }
 
-/* STATUS MESSAGES */
-#success-msg {
-  margin-top: 10px;
+/* MODAL */
+#warning {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
 }
 
-#error-msg {
-  margin-top: 10px;
+.modal {
+  background: #111;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 360px;
+  text-align: center;
 }
 </style>
 </head>
@@ -159,12 +169,11 @@ section { padding: 60px 20px; }
       Wyślij
     </button>
 
-    <!-- STATUS -->
-    <p id="success-msg" class="text-green-400 hidden">
+    <p id="success-msg" class="text-green-400 hidden mt-3">
       ✔ Wiadomość została wysłana!
     </p>
 
-    <p id="error-msg" class="text-red-400 hidden">
+    <p id="error-msg" class="text-red-400 hidden mt-3">
       ❌ Błąd wysyłki wiadomości.
     </p>
   </form>
@@ -175,9 +184,30 @@ section { padding: 60px 20px; }
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
 </audio>
 
-<!-- PARTY -->
-<div class="party-btn" onclick="showWarning()" id="partyBtn">
+<!-- PARTY BUTTON -->
+<div class="party-btn" onclick="handlePartyClick()" id="partyBtn">
 🎉 PARTY
+</div>
+
+<!-- WARNING MODAL -->
+<div id="warning">
+  <div class="modal">
+    <h2 class="text-red-500 font-bold text-xl mb-2">⚠️ Ostrzeżenie</h2>
+
+    <p class="text-gray-300 mb-3">
+      Migające światła mogą być niebezpieczne dla osób z epilepsją.
+    </p>
+
+    <p class="font-bold mb-4">Czy chcesz kontynuować?</p>
+
+    <button onclick="startParty()" class="bg-green-500 px-4 py-2 rounded m-1">
+      TAK
+    </button>
+
+    <button onclick="closeWarning()" class="bg-red-500 px-4 py-2 rounded m-1">
+      NIE
+    </button>
+  </div>
 </div>
 
 <script>
@@ -195,33 +225,47 @@ function openBooking(){
   window.open("https://calendar.app.google/6WZpceQpuBKEJStF6", "_blank");
 }
 
-// PARTY
+// PARTY LOGIC
 let party = false;
 const music = document.getElementById("music");
 
-function showWarning(){
-  if(confirm("⚠️ Migające światła mogą być niebezpieczne. Kontynuować?")){
-    startParty();
+function handlePartyClick(){
+  if(party){
+    stopParty(); // 🔥 bez pytania
+  } else {
+    showWarning(); // 🔥 ostrzeżenie
   }
 }
 
+function showWarning(){
+  document.getElementById("warning").style.display = "flex";
+}
+
+function closeWarning(){
+  document.getElementById("warning").style.display = "none";
+}
+
 function startParty(){
-  party = !party;
+  document.getElementById("warning").style.display = "none";
+  party = true;
 
-  if(party){
-    music.currentTime = 0;
-    music.play().catch(()=>{});
+  music.currentTime = 0;
+  music.play().catch(()=>{});
 
-    document.body.classList.add("party-mode");
-    document.getElementById("partyBtn").innerText = "⛔ STOP PARTY";
+  document.body.classList.add("party-mode");
+  document.getElementById("partyBtn").innerText = "⛔ STOP PARTY";
+}
 
-  } else {
-    music.pause();
-    music.currentTime = 0;
+function stopParty(){
+  party = false;
 
-    document.body.classList.remove("party-mode");
-    document.getElementById("partyBtn").innerText = "🎉 PARTY";
-  }
+  music.pause();
+  music.currentTime = 0;
+
+  document.body.classList.remove("party-mode");
+  document.getElementById("partyBtn").innerText = "🎉 PARTY";
+
+  document.getElementById("warning").style.display = "none";
 }
 
 // EMAILJS
