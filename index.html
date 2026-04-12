@@ -8,10 +8,6 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
-<!-- Calendly -->
-<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-<script src="https://assets.calendly.com/assets/external/widget.js"></script>
-
 <style>
 body {
   margin: 0;
@@ -52,29 +48,43 @@ body {
   cursor: pointer;
 }
 
-.btn:hover {
-  color: orange;
-}
+.btn:hover { color: orange; }
 
 .card {
   background: #111;
   border: 1px solid #222;
   border-radius: 12px;
   padding: 16px;
-  transition: 0.3s;
 }
 
-.card:hover {
-  border-color: rgba(255,140,0,0.5);
-  transform: translateY(-3px);
+section { padding: 50px 20px; }
+
+input, textarea { color: white; }
+
+/* --- booking --- */
+.day {
+  padding: 10px;
+  border: 1px solid #222;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #111;
 }
 
-section {
-  padding: 50px 20px;
+.day:hover { border-color: orange; }
+
+.slot {
+  padding: 10px;
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
-input, textarea {
-  color: white;
+.slot:hover { border-color: orange; }
+
+.slot.booked {
+  opacity: 0.3;
+  pointer-events: none;
 }
 </style>
 </head>
@@ -84,15 +94,14 @@ input, textarea {
 <div class="bg-glow"></div>
 
 <!-- MENU -->
-<button onclick="toggleMenu()" class="fixed top-5 right-5 text-3xl z-50">
-☰
-</button>
+<button onclick="toggleMenu()" class="fixed top-5 right-5 text-3xl z-50">☰</button>
 
 <div id="menu" class="menu">
   <h2 class="text-orange-500 font-bold mb-6">DjTomi 🎧</h2>
   <div class="btn" onclick="go('about')">O mnie</div>
   <div class="btn" onclick="go('services')">Usługi</div>
   <div class="btn" onclick="go('price')">Cennik</div>
+  <div class="btn" onclick="go('booking')">Rezerwacja</div>
   <div class="btn" onclick="go('contact')">Kontakt</div>
 </div>
 
@@ -103,21 +112,12 @@ input, textarea {
   <p class="text-gray-400 mt-4 max-w-xl mx-auto">
     Profesjonalna oprawa muzyczna imprez — połowinki, urodziny, eventy rodzinne i szkolne.
   </p>
-
-  <!-- CALENDLY BUTTON -->
-  <button
-    onclick="openCalendly()"
-    class="mt-8 bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-xl text-lg font-bold"
-  >
-    📅 Zarezerwuj termin
-  </button>
 </section>
 
 <!-- ABOUT -->
 <section id="about" class="max-w-3xl mx-auto text-center">
   <h2 class="text-3xl text-orange-500 font-bold mb-4">O mnie</h2>
   <p class="text-gray-300">
-    Po ukończeniu szkoły chóralnej zostałem przy muzyce i zacząłem miksować.
     Gram wszystkie style — od klasycznych hitów po klubowe brzmienia.
   </p>
 </section>
@@ -127,10 +127,10 @@ input, textarea {
   <h2 class="text-3xl text-orange-500 font-bold mb-6 text-center">Usługi</h2>
 
   <div class="grid md:grid-cols-2 gap-4">
-    <div class="card">🎓 Połowinki — szkoły i młodzież</div>
-    <div class="card">🎉 Urodziny — dopasowana muzyka</div>
-    <div class="card">👨‍👩‍👧‍👦 Imprezy rodzinne — muzyka dla każdego</div>
-    <div class="card">🏫 Dyskoteki szkolne — prowadzenie + muzyka</div>
+    <div class="card">🎓 Połowinki</div>
+    <div class="card">🎉 Urodziny</div>
+    <div class="card">👨‍👩‍👧‍👦 Imprezy rodzinne</div>
+    <div class="card">🏫 Dyskoteki szkolne</div>
   </div>
 </section>
 
@@ -138,9 +138,20 @@ input, textarea {
 <section id="price" class="text-center max-w-2xl mx-auto">
   <h2 class="text-3xl text-orange-500 font-bold mb-3">Cennik</h2>
   <p class="text-xl font-bold">120 zł / godzina</p>
-  <p class="text-gray-400 mt-2">
-    Wycena indywidualna w zależności od wydarzenia.
-  </p>
+</section>
+
+<!-- BOOKING -->
+<section id="booking" class="max-w-4xl mx-auto text-center">
+  <h2 class="text-3xl text-orange-500 font-bold mb-6">Rezerwacja terminu</h2>
+
+  <div id="calendar" class="grid grid-cols-7 gap-2 text-sm"></div>
+
+  <div id="timeSlots" class="mt-6 hidden">
+    <h3 class="text-xl mb-3">Wybierz godzinę</h3>
+    <div class="grid grid-cols-4 gap-2" id="slots"></div>
+  </div>
+
+  <p id="bookingMsg" class="mt-4 text-green-400 hidden">Termin zarezerwowany!</p>
 </section>
 
 <!-- CONTACT -->
@@ -149,48 +160,23 @@ input, textarea {
 
   <form id="contact-form" class="space-y-3">
 
-    <input
-      name="name"
-      class="w-full p-3 bg-[#111] border border-gray-700 rounded"
-      placeholder="Imię"
-      required
-    >
+    <input name="name" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Imię" required>
 
-    <input
-      name="email"
-      type="email"
-      class="w-full p-3 bg-[#111] border border-gray-700 rounded"
-      placeholder="Email"
-      required
-    >
+    <input name="email" type="email" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Email" required>
 
-    <textarea
-      name="message"
-      class="w-full p-3 bg-[#111] border border-gray-700 rounded"
-      placeholder="Wiadomość"
-      required
-    ></textarea>
+    <textarea name="message" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Wiadomość" required></textarea>
 
-    <button
-      type="submit"
-      class="w-full bg-orange-500 p-3 rounded font-bold hover:bg-orange-600"
-    >
+    <button type="submit" class="w-full bg-orange-500 p-3 rounded font-bold hover:bg-orange-600">
       Wyślij
     </button>
 
-    <p id="success-msg" class="text-green-400 hidden">
-      Wiadomość została wysłana!
-    </p>
-
-    <p id="error-msg" class="text-red-400 hidden">
-      Błąd wysyłki wiadomości.
-    </p>
+    <p id="success-msg" class="text-green-400 hidden">Wysłano!</p>
+    <p id="error-msg" class="text-red-400 hidden">Błąd wysyłki</p>
 
   </form>
 </section>
 
 <script>
-// MENU
 const menu = document.getElementById("menu");
 
 function toggleMenu() {
@@ -198,48 +184,93 @@ function toggleMenu() {
 }
 
 function go(id) {
-  document.getElementById(id).scrollIntoView({
-    behavior: "smooth"
-  });
+  document.getElementById(id).scrollIntoView({ behavior: "smooth" });
   menu.classList.remove("open");
 }
 
-// CALENDLY POPUP
-function openCalendly() {
-  Calendly.initPopupWidget({
-    url: 'https://calendly.com/djtomi-kontakt/rezerwacja-terminu-djtomi'
+/* EMAILJS */
+emailjs.init("K-SLWWK5O79YX1-Gi");
+
+document.getElementById("contact-form").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  emailjs.sendForm("service_fbue68f", "template_fxzn7el", this)
+  .then(() => {
+    document.getElementById("success-msg").classList.remove("hidden");
+  })
+  .catch(() => {
+    document.getElementById("error-msg").classList.remove("hidden");
+  });
+});
+
+/* BOOKING SYSTEM */
+const calendar = document.getElementById("calendar");
+const slotsBox = document.getElementById("slots");
+const timeSlots = document.getElementById("timeSlots");
+const bookingMsg = document.getElementById("bookingMsg");
+
+let selectedDate = null;
+let bookings = JSON.parse(localStorage.getItem("bookings")) || {};
+
+const hours = ["16:00","17:00","18:00","19:00","20:00","21:00","22:00"];
+
+function generateCalendar() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  calendar.innerHTML = "";
+
+  for (let i = 0; i < firstDay; i++) {
+    calendar.innerHTML += `<div></div>`;
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const key = `${year}-${month+1}-${d}`;
+
+    calendar.innerHTML += `
+      <div class="day" onclick="selectDate('${key}')">${d}</div>
+    `;
+  }
+}
+
+generateCalendar();
+
+function selectDate(date) {
+  selectedDate = date;
+  timeSlots.classList.remove("hidden");
+  renderSlots(date);
+}
+
+function renderSlots(date) {
+  slotsBox.innerHTML = "";
+
+  hours.forEach(h => {
+    const isBooked = bookings[date]?.includes(h);
+
+    slotsBox.innerHTML += `
+      <div class="slot ${isBooked ? "booked" : ""}" onclick="book('${date}','${h}')">
+        ${h}
+      </div>
+    `;
   });
 }
 
-// EMAILJS INIT
-(function(){
-  emailjs.init("K-SLWWK5O79YX1-Gi");
-})();
+function book(date, hour) {
+  if (!bookings[date]) bookings[date] = [];
 
-// FORM SEND
-const form = document.getElementById("contact-form");
-const successMsg = document.getElementById("success-msg");
-const errorMsg = document.getElementById("error-msg");
+  if (!bookings[date].includes(hour)) {
+    bookings[date].push(hour);
+  }
 
-form.addEventListener("submit", function(e){
-  e.preventDefault();
+  localStorage.setItem("bookings", JSON.stringify(bookings));
 
-  emailjs.sendForm(
-    "service_fbue68f",
-    "template_fxzn7el",
-    form
-  )
-  .then(function(){
-    successMsg.classList.remove("hidden");
-    errorMsg.classList.add("hidden");
-    form.reset();
-  })
-  .catch(function(error){
-    console.log(error);
-    errorMsg.classList.remove("hidden");
-    successMsg.classList.add("hidden");
-  });
-});
+  bookingMsg.classList.remove("hidden");
+  renderSlots(date);
+}
 </script>
 
 </body>
