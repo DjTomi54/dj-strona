@@ -18,100 +18,169 @@ body {
   margin: 0;
   background: #0a0a0a;
   color: white;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
+}
+
+.bg-glow {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(255,140,0,0.12), transparent 55%);
+  z-index: -1;
 }
 
 .menu {
   position: fixed;
-  right: 0;
   top: 0;
+  right: 0;
   width: 220px;
   height: 100vh;
-  background: #111;
+  background: rgba(10,10,10,0.97);
+  border-left: 1px solid #222;
   transform: translateX(100%);
   transition: 0.3s;
   padding: 20px;
-  z-index: 50;
+  z-index: 40;
 }
 
 .menu.open { transform: translateX(0); }
 
-.btn { margin: 10px 0; cursor: pointer; color: #aaa; }
+.btn {
+  display: block;
+  margin: 12px 0;
+  color: #bbb;
+  cursor: pointer;
+}
+
 .btn:hover { color: orange; }
 
 .card {
   background: #111;
-  padding: 15px;
-  border-radius: 10px;
   border: 1px solid #222;
+  border-radius: 12px;
+  padding: 16px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  border-color: rgba(255,140,0,0.5);
+  transform: translateY(-3px);
+}
+
+section { padding: 60px 20px; }
+
+.gallery-img {
+  height: 220px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.gallery-img:hover {
+  transform: scale(1.03);
+  filter: brightness(1.1);
 }
 </style>
 </head>
 
 <body>
 
+<div class="bg-glow"></div>
+
 <!-- MENU -->
-<button onclick="toggleMenu()" style="position:fixed;top:20px;right:20px;font-size:30px;z-index:100;">☰</button>
+<button onclick="toggleMenu()" class="fixed top-5 right-5 text-3xl z-50">☰</button>
 
 <div id="menu" class="menu">
+  <h2 class="text-orange-500 font-bold mb-6">DjTomi 🎧</h2>
+
   <div class="btn" onclick="go('about')">O mnie</div>
   <div class="btn" onclick="go('services')">Usługi</div>
   <div class="btn" onclick="go('gallery')">Galeria</div>
+  <div class="btn" onclick="openBooking()">📅 Rezerwacja</div>
   <div class="btn" onclick="go('contact')">Kontakt</div>
 </div>
 
 <!-- HERO -->
 <section class="text-center pt-24">
-  <h1 style="font-size:60px;color:orange;">DjTomi</h1>
-  <p>DJ na imprezy • połowinki • urodziny • eventy</p>
+  <h1 class="text-6xl font-bold text-orange-500">DjTomi</h1>
+
+  <p class="text-gray-400 mt-4 max-w-xl mx-auto">
+    Profesjonalna oprawa muzyczna imprez — połowinki, urodziny, eventy rodzinne i szkolne.
+  </p>
+
+  <button onclick="openBooking()"
+    class="mt-8 bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-xl text-lg font-bold">
+    📅 Zarezerwuj termin
+  </button>
 </section>
 
 <!-- ABOUT -->
-<section id="about" class="text-center max-w-3xl mx-auto">
-  <h2 style="color:orange;">O mnie</h2>
-  <p>
-    Po ukończeniu szkoły chóralnej wybrałem DJ-ing i rozwijam się w tej branży.
-    Gram na profesjonalnym sprzęcie i stale podnoszę swoje umiejętności.
+<section id="about" class="max-w-3xl mx-auto text-center">
+  <h2 class="text-3xl text-orange-500 font-bold mb-4">O mnie</h2>
+
+  <p class="text-gray-300">
+    Po ukończeniu szkoły chóralnej postanowiłem pozostać na ścieżce muzycznej i wybrałem DJ-ing.
+    Gram na profesjonalnym sprzęcie i stale rozwijam swoje umiejętności sceniczne.
   </p>
 </section>
 
 <!-- SERVICES -->
-<section id="services" class="text-center">
-  <h2 style="color:orange;">Usługi</h2>
-  <div class="card">🎉 Urodziny</div>
-  <div class="card">🎓 Połowinki</div>
-  <div class="card">👨‍👩‍👧‍👦 Imprezy rodzinne</div>
+<section id="services" class="max-w-5xl mx-auto text-center">
+  <h2 class="text-3xl text-orange-500 font-bold mb-6">Usługi</h2>
+
+  <div class="grid md:grid-cols-2 gap-4">
+    <div class="card">🎓 Połowinki</div>
+    <div class="card">🎉 Urodziny</div>
+    <div class="card">👨‍👩‍👧‍👦 Imprezy rodzinne</div>
+    <div class="card">🏫 Dyskoteki szkolne</div>
+  </div>
 </section>
 
 <!-- GALLERY -->
-<section id="gallery" class="text-center max-w-5xl mx-auto">
-  <h2 style="color:orange;">Galeria</h2>
+<section id="gallery" class="max-w-6xl mx-auto text-center">
+  <h2 class="text-3xl text-orange-500 font-bold mb-4">Galeria</h2>
 
-  <input type="file" id="fileInput">
-  <button onclick="uploadImage()" style="background:orange;padding:10px;border:none;">
+  <input type="file" id="fileInput" class="mb-3 text-gray-300">
+
+  <button onclick="uploadImage()"
+    class="bg-orange-500 px-6 py-2 rounded font-bold hover:bg-orange-600">
     Dodaj zdjęcie
   </button>
 
-  <div id="galleryGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;"></div>
+  <div id="galleryGrid" class="grid md:grid-cols-3 gap-4 mt-6"></div>
 </section>
 
 <!-- CONTACT -->
-<section id="contact" class="text-center">
-  <h2 style="color:orange;">Kontakt</h2>
+<section id="contact" class="max-w-md mx-auto text-center">
+  <h2 class="text-3xl text-orange-500 font-bold mb-4">Kontakt</h2>
 
-  <form id="contact-form">
-    <input name="name" placeholder="Imię"><br>
-    <input name="email" placeholder="Email"><br>
-    <textarea name="message" placeholder="Wiadomość"></textarea><br>
-    <button type="submit">Wyślij</button>
+  <form id="contact-form" class="space-y-3">
+    <input name="name" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Imię">
+    <input name="email" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Email">
+    <textarea name="message" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Wiadomość"></textarea>
+
+    <button class="w-full bg-orange-500 p-3 rounded font-bold hover:bg-orange-600">
+      Wyślij
+    </button>
   </form>
 </section>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" class="fixed inset-0 bg-black bg-opacity-90 hidden items-center justify-center z-50" onclick="closeImg()">
+  <img id="lightboxImg" class="max-w-3xl max-h-[80vh] rounded-xl">
+</div>
 
 <script>
 // MENU
 const menu = document.getElementById("menu");
-function toggleMenu() { menu.classList.toggle("open"); }
+function toggleMenu(){ menu.classList.toggle("open"); }
 function go(id){ document.getElementById(id).scrollIntoView({behavior:"smooth"}); menu.classList.remove("open"); }
+
+// REZERWACJA
+function openBooking(){
+  window.open("https://calendar.app.google/6WZpceQpuBKEJStF6", "_blank");
+}
 
 // EMAILJS
 emailjs.init("K-SLWWK5O79YX1-Gi");
@@ -121,7 +190,7 @@ document.getElementById("contact-form").addEventListener("submit", e=>{
   emailjs.sendForm("service_fbue68f","template_fxzn7el",e.target);
 });
 
-// FIREBASE INIT
+// FIREBASE
 firebase.initializeApp({
   apiKey: "AIzaSyB3eOcBPbWkchmevevGIJzXn9xjf4a8KRo",
   authDomain: "djtomi-gallery.firebaseapp.com",
@@ -145,8 +214,9 @@ function loadImages(){
     snap.forEach(doc=>{
       const d = doc.data();
       galleryGrid.innerHTML += `
-        <img src="${d.url}" style="width:100%;height:200px;object-fit:cover;cursor:pointer"
-        onclick="window.open('${d.url}','_blank')">
+        <img src="${d.url}"
+          class="gallery-img"
+          onclick="openImg('${d.url}')">
       `;
     });
   });
@@ -169,6 +239,18 @@ function uploadImage(){
       fileInput.value="";
     });
   });
+}
+
+// LIGHTBOX
+function openImg(src){
+  document.getElementById("lightboxImg").src = src;
+  const box = document.getElementById("lightbox");
+  box.classList.remove("hidden");
+  box.classList.add("flex");
+}
+
+function closeImg(){
+  document.getElementById("lightbox").classList.add("hidden");
 }
 </script>
 
