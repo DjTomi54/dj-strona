@@ -8,6 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
+<!-- Calendly -->
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script src="https://assets.calendly.com/assets/external/widget.js"></script>
+
 <style>
 body {
   margin: 0;
@@ -23,7 +27,6 @@ body {
   z-index: -1;
 }
 
-/* MENU */
 .menu {
   position: fixed;
   top: 0;
@@ -53,12 +56,6 @@ body {
   color: orange;
 }
 
-/* HERO */
-.hero {
-  padding: 100px 20px 60px;
-  text-align: center;
-}
-
 .card {
   background: #111;
   border: 1px solid #222;
@@ -79,41 +76,6 @@ section {
 input, textarea {
   color: white;
 }
-
-/* BOOKING MODAL */
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.75);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-  padding: 20px;
-}
-
-.modal.open {
-  display: flex;
-}
-
-.modal-content {
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 16px;
-  width: 95%;
-  max-width: 900px;
-  padding: 20px;
-  position: relative;
-}
-
-.close-btn {
-  position: absolute;
-  right: 20px;
-  top: 15px;
-  font-size: 28px;
-  cursor: pointer;
-  color: orange;
-}
 </style>
 </head>
 
@@ -121,188 +83,162 @@ input, textarea {
 
 <div class="bg-glow"></div>
 
-<!-- MENU BUTTON -->
+<!-- MENU -->
 <button onclick="toggleMenu()" class="fixed top-5 right-5 text-3xl z-50">
 ☰
 </button>
 
-<!-- MENU -->
 <div id="menu" class="menu">
-<h2 class="text-orange-500 font-bold mb-6">DjTomi 🎧</h2>
-<div class="btn" onclick="go('about')">O mnie</div>
-<div class="btn" onclick="go('services')">Usługi</div>
-<div class="btn" onclick="go('price')">Cennik</div>
-<div class="btn" onclick="go('contact')">Kontakt</div>
+  <h2 class="text-orange-500 font-bold mb-6">DjTomi 🎧</h2>
+  <div class="btn" onclick="go('about')">O mnie</div>
+  <div class="btn" onclick="go('services')">Usługi</div>
+  <div class="btn" onclick="go('price')">Cennik</div>
+  <div class="btn" onclick="go('contact')">Kontakt</div>
 </div>
 
 <!-- HERO -->
-<section class="hero">
-<h1 class="text-6xl font-bold text-orange-500">DjTomi</h1>
+<section class="text-center pt-24">
+  <h1 class="text-6xl font-bold text-orange-500">DjTomi</h1>
 
-<p class="text-gray-400 mt-4 max-w-xl mx-auto">
-Profesjonalna oprawa muzyczna imprez — połowinki, urodziny, eventy rodzinne i szkolne.
-</p>
+  <p class="text-gray-400 mt-4 max-w-xl mx-auto">
+    Profesjonalna oprawa muzyczna imprez — połowinki, urodziny, eventy rodzinne i szkolne.
+  </p>
 
-<button 
-onclick="openBooking()" 
-class="mt-8 bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-xl text-lg font-bold">
-📅 Zarezerwuj termin
-</button>
+  <!-- CALENDLY BUTTON -->
+  <button
+    onclick="openCalendly()"
+    class="mt-8 bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-xl text-lg font-bold"
+  >
+    📅 Zarezerwuj termin
+  </button>
 </section>
 
 <!-- ABOUT -->
 <section id="about" class="max-w-3xl mx-auto text-center">
-<h2 class="text-3xl text-orange-500 font-bold mb-4">O mnie</h2>
-<p class="text-gray-300">
-Po ukończeniu szkoły chóralnej zostałem przy muzyce i zacząłem miksować.
-Gram wszystkie style — od klasycznych hitów po klubowe brzmienia.
-</p>
+  <h2 class="text-3xl text-orange-500 font-bold mb-4">O mnie</h2>
+  <p class="text-gray-300">
+    Po ukończeniu szkoły chóralnej zostałem przy muzyce i zacząłem miksować.
+    Gram wszystkie style — od klasycznych hitów po klubowe brzmienia.
+  </p>
 </section>
 
 <!-- SERVICES -->
 <section id="services" class="max-w-5xl mx-auto">
-<h2 class="text-3xl text-orange-500 font-bold mb-6 text-center">Usługi</h2>
+  <h2 class="text-3xl text-orange-500 font-bold mb-6 text-center">Usługi</h2>
 
-<div class="grid md:grid-cols-2 gap-4">
-<div class="card">🎓 Połowinki — szkoły i młodzież</div>
-<div class="card">🎉 Urodziny — dopasowana muzyka</div>
-<div class="card">👨‍👩‍👧‍👦 Rodzinne — każdy wiek</div>
-<div class="card">🏫 Szkolne — prowadzenie + muzyka</div>
-</div>
+  <div class="grid md:grid-cols-2 gap-4">
+    <div class="card">🎓 Połowinki — szkoły i młodzież</div>
+    <div class="card">🎉 Urodziny — dopasowana muzyka</div>
+    <div class="card">👨‍👩‍👧‍👦 Imprezy rodzinne — muzyka dla każdego</div>
+    <div class="card">🏫 Dyskoteki szkolne — prowadzenie + muzyka</div>
+  </div>
 </section>
 
 <!-- PRICE -->
 <section id="price" class="text-center max-w-2xl mx-auto">
-<h2 class="text-3xl text-orange-500 font-bold mb-3">Cennik</h2>
-<p class="text-xl font-bold">120 zł / godzina</p>
-<p class="text-gray-400 mt-2">
-Wycena indywidualna w zależności od wydarzenia.
-</p>
+  <h2 class="text-3xl text-orange-500 font-bold mb-3">Cennik</h2>
+  <p class="text-xl font-bold">120 zł / godzina</p>
+  <p class="text-gray-400 mt-2">
+    Wycena indywidualna w zależności od wydarzenia.
+  </p>
 </section>
 
 <!-- CONTACT -->
 <section id="contact" class="max-w-md mx-auto text-center">
-<h2 class="text-3xl text-orange-500 font-bold mb-4">Kontakt</h2>
+  <h2 class="text-3xl text-orange-500 font-bold mb-4">Kontakt</h2>
 
-<form id="contact-form" class="space-y-3">
+  <form id="contact-form" class="space-y-3">
 
-<input 
-name="name"
-class="w-full p-3 bg-[#111] border border-gray-700 rounded"
-placeholder="Imię"
-required
->
+    <input
+      name="name"
+      class="w-full p-3 bg-[#111] border border-gray-700 rounded"
+      placeholder="Imię"
+      required
+    >
 
-<input 
-name="email"
-type="email"
-class="w-full p-3 bg-[#111] border border-gray-700 rounded"
-placeholder="Email"
-required
->
+    <input
+      name="email"
+      type="email"
+      class="w-full p-3 bg-[#111] border border-gray-700 rounded"
+      placeholder="Email"
+      required
+    >
 
-<textarea 
-name="message"
-class="w-full p-3 bg-[#111] border border-gray-700 rounded"
-placeholder="Wiadomość"
-required
-></textarea>
+    <textarea
+      name="message"
+      class="w-full p-3 bg-[#111] border border-gray-700 rounded"
+      placeholder="Wiadomość"
+      required
+    ></textarea>
 
-<button 
-type="submit"
-class="w-full bg-orange-500 p-3 rounded font-bold hover:bg-orange-600">
-Wyślij
-</button>
+    <button
+      type="submit"
+      class="w-full bg-orange-500 p-3 rounded font-bold hover:bg-orange-600"
+    >
+      Wyślij
+    </button>
 
-<p id="success-msg" class="text-green-400 hidden">
-Wiadomość została wysłana!
-</p>
+    <p id="success-msg" class="text-green-400 hidden">
+      Wiadomość została wysłana!
+    </p>
 
-<p id="error-msg" class="text-red-400 hidden">
-Błąd wysyłki wiadomości.
-</p>
+    <p id="error-msg" class="text-red-400 hidden">
+      Błąd wysyłki wiadomości.
+    </p>
 
-</form>
+  </form>
 </section>
-
-<!-- BOOKING MODAL -->
-<div id="bookingModal" class="modal">
-
-<div class="modal-content">
-
-<span class="close-btn" onclick="closeBooking()">×</span>
-
-<h2 class="text-2xl text-orange-500 font-bold mb-4 text-center">
-📅 Rezerwacja terminów
-</h2>
-
-<p class="text-gray-400 text-center mb-4">
-Sprawdź wolne i zajęte terminy:
-</p>
-
-<iframe 
-src="https://calendar.google.com/calendar/embed?src=626ad022dec03f12a48426e3015d84dadba2a32ee896798c62d3e2f856737748%40group.calendar.google.com&ctz=Europe%2FWarsaw" 
-style="border:0; width:100%; height:600px;" 
-frameborder="0" 
-scrolling="no">
-</iframe>
-
-</div>
-</div>
 
 <script>
 // MENU
 const menu = document.getElementById("menu");
 
 function toggleMenu() {
-menu.classList.toggle("open");
+  menu.classList.toggle("open");
 }
 
 function go(id) {
-document.getElementById(id).scrollIntoView({
-behavior: "smooth"
-});
-menu.classList.remove("open");
+  document.getElementById(id).scrollIntoView({
+    behavior: "smooth"
+  });
+  menu.classList.remove("open");
 }
 
-// BOOKING MODAL
-const bookingModal = document.getElementById("bookingModal");
-
-function openBooking() {
-bookingModal.classList.add("open");
+// CALENDLY POPUP
+function openCalendly() {
+  Calendly.initPopupWidget({
+    url: 'https://calendly.com/djtomi-kontakt/rezerwacja-terminu-djtomi'
+  });
 }
 
-function closeBooking() {
-bookingModal.classList.remove("open");
-}
-
-// EMAILJS
+// EMAILJS INIT
 (function(){
-emailjs.init("K-SLWWK5O79YX1-Gi");
+  emailjs.init("K-SLWWK5O79YX1-Gi");
 })();
 
+// FORM SEND
 const form = document.getElementById("contact-form");
 const successMsg = document.getElementById("success-msg");
 const errorMsg = document.getElementById("error-msg");
 
 form.addEventListener("submit", function(e){
-e.preventDefault();
+  e.preventDefault();
 
-emailjs.sendForm(
-"service_fbue68f",
-"template_fxzn7el",
-form
-)
-.then(function(){
-successMsg.classList.remove("hidden");
-errorMsg.classList.add("hidden");
-form.reset();
-})
-.catch(function(error){
-console.log(error);
-errorMsg.classList.remove("hidden");
-successMsg.classList.add("hidden");
-});
+  emailjs.sendForm(
+    "service_fbue68f",
+    "template_fxzn7el",
+    form
+  )
+  .then(function(){
+    successMsg.classList.remove("hidden");
+    errorMsg.classList.add("hidden");
+    form.reset();
+  })
+  .catch(function(error){
+    console.log(error);
+    errorMsg.classList.remove("hidden");
+    successMsg.classList.add("hidden");
+  });
 });
 </script>
 
