@@ -6,7 +6,6 @@
 <title>DjTomi</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
 <style>
 body {
@@ -59,33 +58,6 @@ body {
 
 section { padding: 50px 20px; }
 
-input, textarea { color: white; }
-
-/* --- booking --- */
-.day {
-  padding: 10px;
-  border: 1px solid #222;
-  border-radius: 8px;
-  cursor: pointer;
-  background: #111;
-}
-
-.day:hover { border-color: orange; }
-
-.slot {
-  padding: 10px;
-  background: #111;
-  border: 1px solid #222;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.slot:hover { border-color: orange; }
-
-.slot.booked {
-  opacity: 0.3;
-  pointer-events: none;
-}
 </style>
 </head>
 
@@ -101,7 +73,7 @@ input, textarea { color: white; }
   <div class="btn" onclick="go('about')">O mnie</div>
   <div class="btn" onclick="go('services')">Usługi</div>
   <div class="btn" onclick="go('price')">Cennik</div>
-  <div class="btn" onclick="go('booking')">Rezerwacja</div>
+  <div class="btn" onclick="openBooking()">Rezerwacja</div>
   <div class="btn" onclick="go('contact')">Kontakt</div>
 </div>
 
@@ -112,6 +84,10 @@ input, textarea { color: white; }
   <p class="text-gray-400 mt-4 max-w-xl mx-auto">
     Profesjonalna oprawa muzyczna imprez — połowinki, urodziny, eventy rodzinne i szkolne.
   </p>
+
+  <button onclick="openBooking()" class="mt-8 bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-xl text-lg font-bold">
+    📅 Zarezerwuj termin
+  </button>
 </section>
 
 <!-- ABOUT -->
@@ -140,40 +116,17 @@ input, textarea { color: white; }
   <p class="text-xl font-bold">120 zł / godzina</p>
 </section>
 
-<!-- BOOKING -->
-<section id="booking" class="max-w-4xl mx-auto text-center">
-  <h2 class="text-3xl text-orange-500 font-bold mb-6">Rezerwacja terminu</h2>
-
-  <div id="calendar" class="grid grid-cols-7 gap-2 text-sm"></div>
-
-  <div id="timeSlots" class="mt-6 hidden">
-    <h3 class="text-xl mb-3">Wybierz godzinę</h3>
-    <div class="grid grid-cols-4 gap-2" id="slots"></div>
-  </div>
-
-  <p id="bookingMsg" class="mt-4 text-green-400 hidden">Termin zarezerwowany!</p>
-</section>
-
 <!-- CONTACT -->
 <section id="contact" class="max-w-md mx-auto text-center">
   <h2 class="text-3xl text-orange-500 font-bold mb-4">Kontakt</h2>
 
-  <form id="contact-form" class="space-y-3">
+  <p class="text-gray-400">
+    Masz pytania? Kliknij rezerwację lub napisz wiadomość.
+  </p>
 
-    <input name="name" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Imię" required>
-
-    <input name="email" type="email" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Email" required>
-
-    <textarea name="message" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Wiadomość" required></textarea>
-
-    <button type="submit" class="w-full bg-orange-500 p-3 rounded font-bold hover:bg-orange-600">
-      Wyślij
-    </button>
-
-    <p id="success-msg" class="text-green-400 hidden">Wysłano!</p>
-    <p id="error-msg" class="text-red-400 hidden">Błąd wysyłki</p>
-
-  </form>
+  <button onclick="openBooking()" class="mt-4 bg-orange-500 px-6 py-3 rounded-xl font-bold">
+    📅 Rezerwacja terminu
+  </button>
 </section>
 
 <script>
@@ -188,88 +141,9 @@ function go(id) {
   menu.classList.remove("open");
 }
 
-/* EMAILJS */
-emailjs.init("K-SLWWK5O79YX1-Gi");
-
-document.getElementById("contact-form").addEventListener("submit", function(e){
-  e.preventDefault();
-
-  emailjs.sendForm("service_fbue68f", "template_fxzn7el", this)
-  .then(() => {
-    document.getElementById("success-msg").classList.remove("hidden");
-  })
-  .catch(() => {
-    document.getElementById("error-msg").classList.remove("hidden");
-  });
-});
-
-/* BOOKING SYSTEM */
-const calendar = document.getElementById("calendar");
-const slotsBox = document.getElementById("slots");
-const timeSlots = document.getElementById("timeSlots");
-const bookingMsg = document.getElementById("bookingMsg");
-
-let selectedDate = null;
-let bookings = JSON.parse(localStorage.getItem("bookings")) || {};
-
-const hours = ["16:00","17:00","18:00","19:00","20:00","21:00","22:00"];
-
-function generateCalendar() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth();
-
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-  calendar.innerHTML = "";
-
-  for (let i = 0; i < firstDay; i++) {
-    calendar.innerHTML += `<div></div>`;
-  }
-
-  for (let d = 1; d <= daysInMonth; d++) {
-    const key = `${year}-${month+1}-${d}`;
-
-    calendar.innerHTML += `
-      <div class="day" onclick="selectDate('${key}')">${d}</div>
-    `;
-  }
-}
-
-generateCalendar();
-
-function selectDate(date) {
-  selectedDate = date;
-  timeSlots.classList.remove("hidden");
-  renderSlots(date);
-}
-
-function renderSlots(date) {
-  slotsBox.innerHTML = "";
-
-  hours.forEach(h => {
-    const isBooked = bookings[date]?.includes(h);
-
-    slotsBox.innerHTML += `
-      <div class="slot ${isBooked ? "booked" : ""}" onclick="book('${date}','${h}')">
-        ${h}
-      </div>
-    `;
-  });
-}
-
-function book(date, hour) {
-  if (!bookings[date]) bookings[date] = [];
-
-  if (!bookings[date].includes(hour)) {
-    bookings[date].push(hour);
-  }
-
-  localStorage.setItem("bookings", JSON.stringify(bookings));
-
-  bookingMsg.classList.remove("hidden");
-  renderSlots(date);
+/* GOOGLE CALENDAR BOOKING */
+function openBooking() {
+  window.open("https://calendar.app.google/6WZpceQpuBKEJStF6", "_blank");
 }
 </script>
 
