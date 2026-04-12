@@ -6,75 +6,82 @@
 <title>DjTomi</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
 <style>
-  body {
-    margin: 0;
-    background: #0a0a0a;
-    color: white;
-  }
+body {
+  margin: 0;
+  background: #0a0a0a;
+  color: white;
+  font-family: Arial, sans-serif;
+}
 
-  .bg-glow {
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(circle at top, rgba(255,140,0,0.12), transparent 55%);
-    z-index: -1;
-  }
+.bg-glow {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(255,140,0,0.12), transparent 55%);
+  z-index: -1;
+}
 
-  .fade {
-    animation: fadeIn 0.7s ease;
-  }
+.fade {
+  animation: fadeIn 0.7s ease;
+}
 
-  @keyframes fadeIn {
-    from {opacity: 0; transform: translateY(12px);}
-    to {opacity: 1; transform: translateY(0);}
-  }
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(12px);}
+  to {opacity: 1; transform: translateY(0);}
+}
 
-  /* MENU */
-  .menu {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 220px;
-    height: 100vh;
-    background: rgba(10,10,10,0.97);
-    border-left: 1px solid #222;
-    transform: translateX(100%);
-    transition: 0.3s;
-    padding: 20px;
-  }
+/* MENU */
+.menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 220px;
+  height: 100vh;
+  background: rgba(10,10,10,0.97);
+  border-left: 1px solid #222;
+  transform: translateX(100%);
+  transition: 0.3s;
+  padding: 20px;
+  z-index: 40;
+}
 
-  .menu.open {
-    transform: translateX(0);
-  }
+.menu.open {
+  transform: translateX(0);
+}
 
-  .btn {
-    display: block;
-    margin: 12px 0;
-    color: #bbb;
-    cursor: pointer;
-  }
+.btn {
+  display: block;
+  margin: 12px 0;
+  color: #bbb;
+  cursor: pointer;
+}
 
-  .btn:hover {
-    color: orange;
-  }
+.btn:hover {
+  color: orange;
+}
 
-  .card {
-    background: #111;
-    border: 1px solid #222;
-    border-radius: 12px;
-    padding: 16px;
-    transition: 0.3s;
-  }
+.card {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 16px;
+  transition: 0.3s;
+}
 
-  .card:hover {
-    border-color: rgba(255,140,0,0.5);
-    transform: translateY(-3px);
-  }
+.card:hover {
+  border-color: rgba(255,140,0,0.5);
+  transform: translateY(-3px);
+}
 
-  section {
-    padding: 60px 20px;
-  }
+section {
+  padding: 60px 20px;
+}
+
+input, textarea {
+  color: white;
+}
 </style>
 </head>
 
@@ -82,99 +89,147 @@
 
 <div class="bg-glow"></div>
 
-<!-- MENU -->
+<!-- HAMBURGER MENU -->
 <button onclick="toggleMenu()" class="fixed top-5 right-5 text-3xl z-50">
-  ☰
+☰
 </button>
 
 <div id="menu" class="menu">
-
-  <h2 class="text-orange-500 font-bold mb-6">DjTomi 🎧</h2>
-
-  <div class="btn" onclick="go('about')">O mnie</div>
-  <div class="btn" onclick="go('services')">Usługi</div>
-  <div class="btn" onclick="go('price')">Cennik</div>
-  <div class="btn" onclick="go('contact')">Kontakt</div>
-
+<h2 class="text-orange-500 font-bold mb-6">DjTomi 🎧</h2>
+<div class="btn" onclick="go('about')">O mnie</div>
+<div class="btn" onclick="go('services')">Usługi</div>
+<div class="btn" onclick="go('price')">Cennik</div>
+<div class="btn" onclick="go('contact')">Kontakt</div>
 </div>
 
 <!-- HERO -->
 <section class="text-center fade pt-24">
-  <h1 class="text-6xl font-bold text-orange-500">DjTomi</h1>
-  <p class="text-gray-400 mt-4 max-w-xl mx-auto">
-    Profesjonalna oprawa muzyczna imprez — połowinki, urodziny, eventy rodzinne i szkolne.
-  </p>
+<h1 class="text-6xl font-bold text-orange-500">DjTomi</h1>
+<p class="text-gray-400 mt-4 max-w-xl mx-auto">
+Profesjonalna oprawa muzyczna imprez — połowinki, urodziny, eventy rodzinne i szkolne.
+</p>
 </section>
 
 <!-- ABOUT -->
 <section id="about" class="max-w-3xl mx-auto fade">
-  <h2 class="text-3xl text-orange-500 font-bold mb-3">O mnie</h2>
-  <p class="text-gray-300">
-    Po ukończeniu szkoły chóralnej zostałem przy muzyce i zacząłem miksować.
-    Gram wszystkie style — od klasycznych hitów po klubowe brzmienia.
-  </p>
+<h2 class="text-3xl text-orange-500 font-bold mb-3">O mnie</h2>
+<p class="text-gray-300">
+Po ukończeniu szkoły chóralnej zostałem przy muzyce i zacząłem miksować.
+Gram wszystkie style — od klasycznych hitów po klubowe brzmienia.
+</p>
 </section>
 
 <!-- SERVICES -->
 <section id="services" class="max-w-5xl mx-auto fade">
+<h2 class="text-3xl text-orange-500 font-bold mb-6 text-center">Usługi</h2>
 
-  <h2 class="text-3xl text-orange-500 font-bold mb-6 text-center">Usługi</h2>
-
-  <div class="grid md:grid-cols-2 gap-4">
-
-    <div class="card">🎓 Połowinki — szkoły i młodzież</div>
-    <div class="card">🎉 Urodziny — dopasowana muzyka</div>
-    <div class="card">👨‍👩‍👧‍👦 Rodzinne — każdy wiek</div>
-    <div class="card">🏫 Szkolne — prowadzenie + muzyka</div>
-
-  </div>
-
+<div class="grid md:grid-cols-2 gap-4">
+<div class="card">🎓 Połowinki — szkoły i młodzież</div>
+<div class="card">🎉 Urodziny — dopasowana muzyka</div>
+<div class="card">👨‍👩‍👧‍👦 Rodzinne — każdy wiek</div>
+<div class="card">🏫 Szkolne — prowadzenie + muzyka</div>
+</div>
 </section>
 
 <!-- PRICE -->
 <section id="price" class="text-center fade max-w-2xl mx-auto">
-
-  <h2 class="text-3xl text-orange-500 font-bold mb-3">Cennik</h2>
-
-  <p class="text-xl font-bold">120 zł / godzina</p>
-  <p class="text-gray-400 mt-2">
-    Wycena indywidualna w zależności od wydarzenia.
-  </p>
-
+<h2 class="text-3xl text-orange-500 font-bold mb-3">Cennik</h2>
+<p class="text-xl font-bold">120 zł / godzina</p>
+<p class="text-gray-400 mt-2">
+Wycena indywidualna w zależności od wydarzenia.
+</p>
 </section>
 
 <!-- CONTACT -->
 <section id="contact" class="max-w-md mx-auto text-center fade">
+<h2 class="text-3xl text-orange-500 font-bold mb-4">Kontakt</h2>
 
-  <h2 class="text-3xl text-orange-500 font-bold mb-4">Kontakt</h2>
+<form id="contact-form" class="space-y-3">
 
-  <form class="space-y-3">
+<input 
+name="name"
+class="w-full p-3 bg-[#111] border border-gray-700 rounded"
+placeholder="Imię"
+required
+>
 
-    <input class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Imię">
+<input 
+name="email"
+type="email"
+class="w-full p-3 bg-[#111] border border-gray-700 rounded"
+placeholder="Email"
+required
+>
 
-    <input class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Email">
+<textarea 
+name="message"
+class="w-full p-3 bg-[#111] border border-gray-700 rounded"
+placeholder="Wiadomość"
+required
+></textarea>
 
-    <textarea class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Wiadomość"></textarea>
+<button 
+type="submit"
+class="w-full bg-orange-500 p-3 rounded font-bold hover:bg-orange-600"
+>
+Wyślij
+</button>
 
-    <button class="w-full bg-orange-500 p-3 rounded font-bold">
-      Wyślij
-    </button>
+<p id="success-msg" class="text-green-400 hidden">
+Wiadomość została wysłana!
+</p>
 
-  </form>
+<p id="error-msg" class="text-red-400 hidden">
+Błąd wysyłki wiadomości.
+</p>
 
+</form>
 </section>
 
 <script>
-  const menu = document.getElementById("menu");
+// MENU
+const menu = document.getElementById("menu");
 
-  function toggleMenu() {
-    menu.classList.toggle("open");
-  }
+function toggleMenu() {
+  menu.classList.toggle("open");
+}
 
-  function go(id) {
-    document.getElementById(id).scrollIntoView({ behavior: "smooth" });
-    menu.classList.remove("open");
-  }
+function go(id) {
+  document.getElementById(id).scrollIntoView({
+    behavior: "smooth"
+  });
+  menu.classList.remove("open");
+}
+
+// EMAILJS INIT
+(function(){
+emailjs.init("K-SLWWK5O79YX1-Gi");
+})();
+
+// FORM SEND
+const form = document.getElementById("contact-form");
+const successMsg = document.getElementById("success-msg");
+const errorMsg = document.getElementById("error-msg");
+
+form.addEventListener("submit", function(e){
+e.preventDefault();
+
+emailjs.sendForm(
+"service_fbue68f",
+"template_fxzn7el",
+form
+)
+.then(function(){
+successMsg.classList.remove("hidden");
+errorMsg.classList.add("hidden");
+form.reset();
+})
+.catch(function(error){
+console.log(error);
+errorMsg.classList.remove("hidden");
+successMsg.classList.add("hidden");
+});
+});
 </script>
 
 </body>
