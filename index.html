@@ -57,18 +57,19 @@ section { padding: 60px 20px; }
   padding: 16px;
 }
 
-/* PARTY MODE */
+/* SLOW PARTY LIGHTS */
 @keyframes strobe {
   0% { background: red; }
-  20% { background: blue; }
-  40% { background: lime; }
-  60% { background: purple; }
-  80% { background: yellow; }
+  15% { background: blue; }
+  30% { background: black; }
+  45% { background: lime; }
+  60% { background: black; }
+  75% { background: purple; }
   100% { background: red; }
 }
 
 .party-mode {
-  animation: strobe 0.15s infinite;
+  animation: strobe 0.8s infinite;
 }
 
 /* PARTY BUTTON */
@@ -99,7 +100,7 @@ section { padding: 60px 20px; }
   background: #111;
   padding: 20px;
   border-radius: 12px;
-  max-width: 320px;
+  max-width: 340px;
   text-align: center;
 }
 </style>
@@ -123,8 +124,9 @@ section { padding: 60px 20px; }
 <!-- HERO -->
 <section class="text-center pt-24">
   <h1 class="text-6xl font-bold text-orange-500">DjTomi</h1>
+
   <p class="text-gray-400 mt-4 max-w-xl mx-auto">
-    Profesjonalna oprawa muzyczna imprez — połowinki, urodziny, eventy rodzinne i szkolne.
+    Profesjonalna oprawa muzyczna imprez — połowinki, urodziny, eventy szkolne i rodzinne.
   </p>
 
   <button onclick="openBooking()"
@@ -133,7 +135,7 @@ section { padding: 60px 20px; }
   </button>
 </section>
 
-<!-- ABOUT (pełne) -->
+<!-- ABOUT -->
 <section id="about" class="max-w-3xl mx-auto text-center">
   <h2 class="text-3xl text-orange-500 font-bold mb-4">O mnie</h2>
 
@@ -143,7 +145,7 @@ section { padding: 60px 20px; }
   </p>
 </section>
 
-<!-- SERVICES (pełne 4) -->
+<!-- SERVICES -->
 <section id="services" class="max-w-5xl mx-auto text-center">
   <h2 class="text-3xl text-orange-500 font-bold mb-6">Usługi</h2>
 
@@ -155,7 +157,7 @@ section { padding: 60px 20px; }
   </div>
 </section>
 
-<!-- CONTACT (formularz email) -->
+<!-- CONTACT -->
 <section id="contact" class="max-w-md mx-auto text-center">
   <h2 class="text-3xl text-orange-500 font-bold mb-4">Kontakt</h2>
 
@@ -172,10 +174,10 @@ section { padding: 60px 20px; }
 
 <!-- MUSIC -->
 <audio id="music" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a9c2f7.mp3?filename=club-dance-11063.mp3" type="audio/mpeg">
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
 </audio>
 
-<!-- PARTY -->
+<!-- PARTY BUTTON -->
 <div class="party-btn" onclick="showWarning()" id="partyBtn">
 🎉 PARTY
 </div>
@@ -184,9 +186,12 @@ section { padding: 60px 20px; }
 <div id="warning">
   <div class="modal">
     <h2 class="text-red-500 font-bold text-xl mb-2">⚠️ Ostrzeżenie</h2>
+
     <p class="text-gray-300 mb-3">
-      Migające światła mogą być niebezpieczne dla osób z epilepsją.
+      Migające światła mogą być niebezpieczne dla osób z epilepsją lub nadwrażliwością na światło.
     </p>
+
+    <p class="font-bold mb-3">Czy chcesz kontynuować?</p>
 
     <button onclick="startParty()" class="bg-green-500 px-4 py-2 rounded m-1">TAK</button>
     <button onclick="closeWarning()" class="bg-red-500 px-4 py-2 rounded m-1">NIE</button>
@@ -225,9 +230,15 @@ function startParty(){
   party = !party;
 
   if(party){
-    music.play().catch(()=>{});
+    music.currentTime = 0;
+
+    music.play().then(()=>{}).catch(()=>{
+      alert("Kliknij PARTY jeszcze raz (blokada przeglądarki)");
+    });
+
     document.body.classList.add("party-mode");
     document.getElementById("partyBtn").innerText = "⛔ STOP PARTY";
+
   } else {
     music.pause();
     music.currentTime = 0;
@@ -241,8 +252,9 @@ emailjs.init("K-SLWWK5O79YX1-Gi");
 
 document.getElementById("contact-form").addEventListener("submit", function(e){
   e.preventDefault();
+
   emailjs.sendForm("service_fbue68f","template_fxzn7el",this)
-    .then(()=>alert("Wysłano!"))
+    .then(()=>alert("Wiadomość wysłana!"))
     .catch(()=>alert("Błąd wysyłki"));
 });
 
