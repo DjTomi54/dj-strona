@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DjTomi PARTY MODE</title>
+<title>DjTomi</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -15,23 +15,59 @@ body {
   font-family: Arial, sans-serif;
 }
 
-/* COLOR STROBE */
+.bg-glow {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(255,140,0,0.12), transparent 55%);
+  z-index: -1;
+}
+
+/* MENU */
+.menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 220px;
+  height: 100vh;
+  background: rgba(10,10,10,0.97);
+  border-left: 1px solid #222;
+  transform: translateX(100%);
+  transition: 0.3s;
+  padding: 20px;
+  z-index: 40;
+}
+
+.menu.open { transform: translateX(0); }
+
+.btn {
+  display: block;
+  margin: 12px 0;
+  color: #bbb;
+  cursor: pointer;
+}
+.btn:hover { color: orange; }
+
+section { padding: 60px 20px; }
+
+.card {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+/* PARTY EFFECT */
 @keyframes strobe {
   0% { background: red; }
-  10% { background: blue; }
-  20% { background: lime; }
-  30% { background: purple; }
-  40% { background: yellow; }
-  50% { background: cyan; }
-  60% { background: hotpink; }
-  70% { background: orange; }
-  80% { background: white; }
-  90% { background: magenta; }
+  20% { background: blue; }
+  40% { background: lime; }
+  60% { background: purple; }
+  80% { background: yellow; }
   100% { background: red; }
 }
 
 .party-mode {
-  animation: strobe 0.2s infinite;
+  animation: strobe 0.15s infinite;
 }
 
 /* BUTTON */
@@ -46,12 +82,9 @@ body {
   cursor: pointer;
   z-index: 100;
 }
-.party-btn:hover {
-  background: #be123c;
-}
 
 /* MODAL */
-#warningBox {
+#warning {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.9);
@@ -65,88 +98,117 @@ body {
   background: #111;
   padding: 20px;
   border-radius: 12px;
-  text-align: center;
   max-width: 320px;
-}
-
-button {
-  margin: 5px;
+  text-align: center;
 }
 </style>
 </head>
 
 <body>
 
-<h1 class="text-center mt-20 text-4xl text-orange-500 font-bold">
-DJ PARTY MODE
-</h1>
+<div class="bg-glow"></div>
 
-<!-- MUSIC -->
-<audio id="music" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/10/16/audio_3b1d1a5f6a.mp3?filename=tech-house-112194.mp3" type="audio/mpeg">
-</audio>
+<!-- MENU -->
+<button onclick="toggleMenu()" class="fixed top-5 right-5 text-3xl z-50">☰</button>
 
-<!-- BUTTON -->
-<div class="party-btn" onclick="showWarning()">
-🎉 PARTY
+<div id="menu" class="menu">
+  <h2 class="text-orange-500 font-bold mb-6">DjTomi 🎧</h2>
+  <div class="btn" onclick="go('about')">O mnie</div>
+  <div class="btn" onclick="go('services')">Usługi</div>
+  <div class="btn" onclick="go('contact')">Kontakt</div>
+  <div class="btn" onclick="openBooking()">Rezerwacja</div>
 </div>
 
-<!-- WARNING MODAL -->
-<div id="warningBox">
+<!-- HERO -->
+<section class="text-center pt-24">
+  <h1 class="text-6xl font-bold text-orange-500">DjTomi</h1>
+  <p class="text-gray-400 mt-4">Profesjonalny DJ na każdą imprezę</p>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="text-center">
+  <h2 class="text-3xl text-orange-500 font-bold">O mnie</h2>
+  <p class="text-gray-300 mt-2">
+    DJ z pasją — gram eventy, szkoły i imprezy prywatne.
+  </p>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="text-center">
+  <h2 class="text-3xl text-orange-500 font-bold">Usługi</h2>
+  <div class="card mt-4">🎉 Imprezy</div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="text-center">
+  <h2 class="text-3xl text-orange-500 font-bold">Kontakt</h2>
+</section>
+
+<!-- WARNING -->
+<div id="warning">
   <div class="modal">
-    <h2 class="text-red-500 font-bold text-xl mb-3">⚠️ Ostrzeżenie</h2>
-
-    <p class="text-gray-300 mb-4">
-      Efekt zawiera szybkie migające światła i może być nieodpowiedni dla osób z epilepsją lub nadwrażliwością na światło.
+    <h2 class="text-red-500 font-bold text-xl">⚠️ Ostrzeżenie</h2>
+    <p class="text-gray-300 mt-2">
+      Migające światła mogą być niebezpieczne.
     </p>
+    <p class="mt-3 font-bold">Kontynuować?</p>
 
-    <p class="font-bold mb-3">Czy chcesz kontynuować?</p>
-
-    <button onclick="startParty()" class="bg-green-500 px-4 py-2 rounded">
-      TAK
-    </button>
-
-    <button onclick="closeWarning()" class="bg-red-500 px-4 py-2 rounded">
-      NIE
-    </button>
+    <button onclick="startParty()" class="bg-green-500 px-4 py-2 rounded m-2">TAK</button>
+    <button onclick="closeWarning()" class="bg-red-500 px-4 py-2 rounded m-2">NIE</button>
   </div>
+</div>
+
+<!-- MUSIC (MACARENA 🔥) -->
+<audio id="music" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
+<!-- PARTY BUTTON -->
+<div class="party-btn" onclick="showWarning()" id="partyBtn">
+🎉 PARTY
 </div>
 
 <script>
 
-let partyOn = false;
+// MENU
+function toggleMenu(){
+  document.getElementById("menu").classList.toggle("open");
+}
 
+function go(id){
+  document.getElementById(id).scrollIntoView({behavior:"smooth"});
+}
+
+function openBooking(){
+  window.open("https://calendar.app.google/6WZpceQpuBKEJStF6", "_blank");
+}
+
+// PARTY
+let party = false;
 const music = document.getElementById("music");
-const warningBox = document.getElementById("warningBox");
+const warning = document.getElementById("warning");
 
 function showWarning(){
-  warningBox.style.display = "flex";
+  warning.style.display = "flex";
 }
 
 function closeWarning(){
-  warningBox.style.display = "none";
+  warning.style.display = "none";
 }
 
 function startParty(){
+  warning.style.display = "none";
+  party = !party;
 
-  warningBox.style.display = "none";
-
-  partyOn = !partyOn;
-
-  if(partyOn){
-    music.play().catch(err => console.log(err));
-
+  if(party){
+    music.play().catch(()=>{});
     document.body.classList.add("party-mode");
-
-    document.querySelector(".party-btn").innerText = "⛔ STOP PARTY";
-
+    document.getElementById("partyBtn").innerText = "⛔ STOP";
   } else {
     music.pause();
     music.currentTime = 0;
-
     document.body.classList.remove("party-mode");
-
-    document.querySelector(".party-btn").innerText = "🎉 PARTY";
+    document.getElementById("partyBtn").innerText = "🎉 PARTY";
   }
 }
 
