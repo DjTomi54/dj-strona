@@ -8,10 +8,6 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
-<!-- FIREBASE (tylko Firestore) -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
 <style>
 body {
   margin: 0;
@@ -27,6 +23,7 @@ body {
   z-index: -1;
 }
 
+/* MENU */
 .menu {
   position: fixed;
   top: 0;
@@ -52,33 +49,45 @@ body {
 
 .btn:hover { color: orange; }
 
+/* SEKCJE */
+section { padding: 60px 20px; }
+
 .card {
   background: #111;
   border: 1px solid #222;
   border-radius: 12px;
   padding: 16px;
-  transition: 0.3s;
 }
 
-.card:hover {
-  border-color: rgba(255,140,0,0.5);
-  transform: translateY(-3px);
+/* PARTY MODE STROBE */
+@keyframes strobe {
+  0% { background: black; }
+  25% { background: white; }
+  50% { background: black; }
+  75% { background: white; }
+  100% { background: black; }
 }
 
-section { padding: 60px 20px; }
+.party-mode {
+  animation: strobe 0.15s infinite;
+}
 
-.gallery-img {
-  height: 220px;
-  width: 100%;
-  object-fit: cover;
-  border-radius: 12px;
+/* PARTY BUTTON */
+.party-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #e11d48;
+  color: white;
+  font-weight: bold;
+  padding: 12px 16px;
+  border-radius: 999px;
   cursor: pointer;
-  transition: 0.3s;
+  z-index: 100;
+  box-shadow: 0 0 20px rgba(225,29,72,0.6);
 }
-
-.gallery-img:hover {
-  transform: scale(1.03);
-  filter: brightness(1.1);
+.party-btn:hover {
+  background: #be123c;
 }
 </style>
 </head>
@@ -94,9 +103,8 @@ section { padding: 60px 20px; }
   <h2 class="text-orange-500 font-bold mb-6">DjTomi 🎧</h2>
   <div class="btn" onclick="go('about')">O mnie</div>
   <div class="btn" onclick="go('services')">Usługi</div>
-  <div class="btn" onclick="go('gallery')">Galeria</div>
-  <div class="btn" onclick="openBooking()">📅 Rezerwacja</div>
   <div class="btn" onclick="go('contact')">Kontakt</div>
+  <div class="btn" onclick="openBooking()">📅 Rezerwacja</div>
 </div>
 
 <!-- HERO -->
@@ -104,7 +112,7 @@ section { padding: 60px 20px; }
   <h1 class="text-6xl font-bold text-orange-500">DjTomi</h1>
 
   <p class="text-gray-400 mt-4 max-w-xl mx-auto">
-    Profesjonalna oprawa muzyczna imprez — połowinki, urodziny, eventy szkolne i rodzinne.
+    Profesjonalna oprawa muzyczna imprez — eventy, szkoły, urodziny.
   </p>
 
   <button onclick="openBooking()"
@@ -116,10 +124,8 @@ section { padding: 60px 20px; }
 <!-- ABOUT -->
 <section id="about" class="max-w-3xl mx-auto text-center">
   <h2 class="text-3xl text-orange-500 font-bold mb-4">O mnie</h2>
-
   <p class="text-gray-300">
-    Po ukończeniu szkoły chóralnej chciałem pozostać na drodze muzyki i wybrałem DJ-ing.
-    Gram na profesjonalnym sprzęcie i stale rozwijam swoje umiejętności.
+    Po ukończeniu szkoły chóralnej wybrałem DJ-ing i gram na profesjonalnym sprzęcie.
   </p>
 </section>
 
@@ -131,15 +137,8 @@ section { padding: 60px 20px; }
     <div class="card">🎓 Połowinki</div>
     <div class="card">🎉 Urodziny</div>
     <div class="card">👨‍👩‍👧‍👦 Imprezy rodzinne</div>
-    <div class="card">🏫 Dyskoteki szkolne</div>
+    <div class="card">🏫 Eventy szkolne</div>
   </div>
-</section>
-
-<!-- GALLERY -->
-<section id="gallery" class="max-w-6xl mx-auto text-center">
-  <h2 class="text-3xl text-orange-500 font-bold mb-4">Galeria</h2>
-
-  <div id="galleryGrid" class="grid md:grid-cols-3 gap-4"></div>
 </section>
 
 <!-- CONTACT -->
@@ -155,64 +154,52 @@ section { padding: 60px 20px; }
   </form>
 </section>
 
-<!-- LIGHTBOX -->
-<div id="lightbox" class="fixed inset-0 bg-black bg-opacity-90 hidden items-center justify-center z-50" onclick="closeImg()">
-  <img id="lightboxImg" class="max-w-3xl max-h-[80vh] rounded-xl">
+<!-- AUDIO -->
+<audio id="partyAudio" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a9c2f7.mp3?filename=club-dance-11063.mp3" type="audio/mpeg">
+</audio>
+
+<!-- PARTY BUTTON -->
+<div class="party-btn" onclick="toggleParty()" id="partyBtn">
+🎉 PARTY
 </div>
 
 <script>
+
 // MENU
 const menu = document.getElementById("menu");
-function toggleMenu(){ menu.classList.toggle("open"); }
-function go(id){ document.getElementById(id).scrollIntoView({behavior:"smooth"}); menu.classList.remove("open"); }
+
+function toggleMenu(){
+  menu.classList.toggle("open");
+}
+
+function go(id){
+  document.getElementById(id).scrollIntoView({behavior:"smooth"});
+  menu.classList.remove("open");
+}
 
 // REZERWACJA
 function openBooking(){
   window.open("https://calendar.app.google/6WZpceQpuBKEJStF6", "_blank");
 }
 
-// FIREBASE INIT
-firebase.initializeApp({
-  apiKey: "AIzaSyB3eOcBPbWkchmevevGIJzXn9xjf4a8KRo",
-  authDomain: "djtomi-gallery.firebaseapp.com",
-  projectId: "djtomi-gallery",
-  storageBucket: "djtomi-gallery.firebasestorage.app",
-  messagingSenderId: "811366816716",
-  appId: "1:811366816716:web:1ad24575bc788756515b69"
-});
+// PARTY MODE
+let partyOn = false;
+const audio = document.getElementById("partyAudio");
 
-const db = firebase.firestore();
+function toggleParty(){
+  partyOn = !partyOn;
 
-const galleryGrid = document.getElementById("galleryGrid");
-
-// LOAD GALLERY (LINKI Z FIRESTORE)
-function loadImages(){
-  db.collection("gallery").orderBy("created","desc")
-  .onSnapshot(snapshot=>{
-    galleryGrid.innerHTML="";
-
-    snapshot.forEach(doc=>{
-      const data = doc.data();
-
-      galleryGrid.innerHTML += `
-        <img src="${data.url}" class="gallery-img"
-          onclick="openImg('${data.url}')">
-      `;
-    });
-  });
-}
-
-loadImages();
-
-// LIGHTBOX
-function openImg(src){
-  document.getElementById("lightboxImg").src = src;
-  document.getElementById("lightbox").classList.remove("hidden");
-  document.getElementById("lightbox").classList.add("flex");
-}
-
-function closeImg(){
-  document.getElementById("lightbox").classList.add("hidden");
+  if(partyOn){
+    audio.play();
+    document.body.classList.add("party-mode");
+    document.getElementById("partyBtn").innerText = "⛔ STOP";
+  } else {
+    audio.pause();
+    audio.currentTime = 0;
+    document.body.classList.remove("party-mode");
+    document.getElementById("partyBtn").innerText = "🎉 PARTY";
+  }
 }
 
 // EMAILJS
@@ -222,6 +209,7 @@ document.getElementById("contact-form").addEventListener("submit", e=>{
   e.preventDefault();
   emailjs.sendForm("service_fbue68f","template_fxzn7el",e.target);
 });
+
 </script>
 
 </body>
