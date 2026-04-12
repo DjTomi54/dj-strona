@@ -8,10 +8,9 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
-<!-- FIREBASE -->
+<!-- FIREBASE (tylko Firestore) -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
 <style>
 body {
@@ -93,7 +92,6 @@ section { padding: 60px 20px; }
 
 <div id="menu" class="menu">
   <h2 class="text-orange-500 font-bold mb-6">DjTomi 🎧</h2>
-
   <div class="btn" onclick="go('about')">O mnie</div>
   <div class="btn" onclick="go('services')">Usługi</div>
   <div class="btn" onclick="go('gallery')">Galeria</div>
@@ -106,7 +104,7 @@ section { padding: 60px 20px; }
   <h1 class="text-6xl font-bold text-orange-500">DjTomi</h1>
 
   <p class="text-gray-400 mt-4 max-w-xl mx-auto">
-    Profesjonalna oprawa muzyczna imprez — połowinki, urodziny, eventy rodzinne i szkolne.
+    Profesjonalna oprawa muzyczna imprez — połowinki, urodziny, eventy szkolne i rodzinne.
   </p>
 
   <button onclick="openBooking()"
@@ -120,8 +118,8 @@ section { padding: 60px 20px; }
   <h2 class="text-3xl text-orange-500 font-bold mb-4">O mnie</h2>
 
   <p class="text-gray-300">
-    Po ukończeniu szkoły chóralnej postanowiłem pozostać na ścieżce muzycznej i wybrałem DJ-ing.
-    Gram na profesjonalnym sprzęcie i stale rozwijam swoje umiejętności sceniczne.
+    Po ukończeniu szkoły chóralnej chciałem pozostać na drodze muzyki i wybrałem DJ-ing.
+    Gram na profesjonalnym sprzęcie i stale rozwijam swoje umiejętności.
   </p>
 </section>
 
@@ -141,14 +139,7 @@ section { padding: 60px 20px; }
 <section id="gallery" class="max-w-6xl mx-auto text-center">
   <h2 class="text-3xl text-orange-500 font-bold mb-4">Galeria</h2>
 
-  <input type="file" id="fileInput" class="mb-3 text-gray-300">
-
-  <button onclick="uploadImage()"
-    class="bg-orange-500 px-6 py-2 rounded font-bold hover:bg-orange-600">
-    Dodaj zdjęcie
-  </button>
-
-  <div id="galleryGrid" class="grid md:grid-cols-3 gap-4 mt-6"></div>
+  <div id="galleryGrid" class="grid md:grid-cols-3 gap-4"></div>
 </section>
 
 <!-- CONTACT -->
@@ -160,9 +151,7 @@ section { padding: 60px 20px; }
     <input name="email" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Email">
     <textarea name="message" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Wiadomość"></textarea>
 
-    <button class="w-full bg-orange-500 p-3 rounded font-bold hover:bg-orange-600">
-      Wyślij
-    </button>
+    <button class="w-full bg-orange-500 p-3 rounded font-bold">Wyślij</button>
   </form>
 </section>
 
@@ -182,15 +171,7 @@ function openBooking(){
   window.open("https://calendar.app.google/6WZpceQpuBKEJStF6", "_blank");
 }
 
-// EMAILJS
-emailjs.init("K-SLWWK5O79YX1-Gi");
-
-document.getElementById("contact-form").addEventListener("submit", e=>{
-  e.preventDefault();
-  emailjs.sendForm("service_fbue68f","template_fxzn7el",e.target);
-});
-
-// FIREBASE
+// FIREBASE INIT
 firebase.initializeApp({
   apiKey: "AIzaSyB3eOcBPbWkchmevevGIJzXn9xjf4a8KRo",
   authDomain: "djtomi-gallery.firebaseapp.com",
@@ -201,57 +182,46 @@ firebase.initializeApp({
 });
 
 const db = firebase.firestore();
-const storage = firebase.storage();
 
 const galleryGrid = document.getElementById("galleryGrid");
-const fileInput = document.getElementById("fileInput");
 
-// LOAD IMAGES
+// LOAD GALLERY (LINKI Z FIRESTORE)
 function loadImages(){
   db.collection("gallery").orderBy("created","desc")
-  .onSnapshot(snap=>{
+  .onSnapshot(snapshot=>{
     galleryGrid.innerHTML="";
-    snap.forEach(doc=>{
-      const d = doc.data();
+
+    snapshot.forEach(doc=>{
+      const data = doc.data();
+
       galleryGrid.innerHTML += `
-        <img src="${d.url}"
-          class="gallery-img"
-          onclick="openImg('${d.url}')">
+        <img src="${data.url}" class="gallery-img"
+          onclick="openImg('${data.url}')">
       `;
     });
   });
 }
+
 loadImages();
-
-// UPLOAD IMAGE
-function uploadImage(){
-  const file = fileInput.files[0];
-  if(!file) return alert("Wybierz zdjęcie!");
-
-  const ref = storage.ref("gallery/" + Date.now() + file.name);
-
-  ref.put(file).then(()=>{
-    ref.getDownloadURL().then(url=>{
-      db.collection("gallery").add({
-        url:url,
-        created:Date.now()
-      });
-      fileInput.value="";
-    });
-  });
-}
 
 // LIGHTBOX
 function openImg(src){
   document.getElementById("lightboxImg").src = src;
-  const box = document.getElementById("lightbox");
-  box.classList.remove("hidden");
-  box.classList.add("flex");
+  document.getElementById("lightbox").classList.remove("hidden");
+  document.getElementById("lightbox").classList.add("flex");
 }
 
 function closeImg(){
   document.getElementById("lightbox").classList.add("hidden");
 }
+
+// EMAILJS
+emailjs.init("K-SLWWK5O79YX1-Gi");
+
+document.getElementById("contact-form").addEventListener("submit", e=>{
+  e.preventDefault();
+  emailjs.sendForm("service_fbue68f","template_fxzn7el",e.target);
+});
 </script>
 
 </body>
