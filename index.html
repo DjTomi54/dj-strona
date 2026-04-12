@@ -57,14 +57,13 @@ section { padding: 60px 20px; }
   padding: 16px;
 }
 
-/* SLOW PARTY LIGHTS */
+/* PARTY EFFECT */
 @keyframes strobe {
   0% { background: red; }
-  15% { background: blue; }
-  30% { background: black; }
-  45% { background: lime; }
-  60% { background: black; }
-  75% { background: purple; }
+  20% { background: blue; }
+  40% { background: lime; }
+  60% { background: purple; }
+  80% { background: yellow; }
   100% { background: red; }
 }
 
@@ -85,23 +84,13 @@ section { padding: 60px 20px; }
   z-index: 100;
 }
 
-/* MODAL */
-#warning {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.9);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 200;
+/* STATUS MESSAGES */
+#success-msg {
+  margin-top: 10px;
 }
 
-.modal {
-  background: #111;
-  padding: 20px;
-  border-radius: 12px;
-  max-width: 340px;
-  text-align: center;
+#error-msg {
+  margin-top: 10px;
 }
 </style>
 </head>
@@ -166,9 +155,18 @@ section { padding: 60px 20px; }
     <input name="email" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Email" required>
     <textarea name="message" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Wiadomość" required></textarea>
 
-    <button class="w-full bg-orange-500 p-3 rounded font-bold hover:bg-orange-600">
+    <button type="submit" class="w-full bg-orange-500 p-3 rounded font-bold hover:bg-orange-600">
       Wyślij
     </button>
+
+    <!-- STATUS -->
+    <p id="success-msg" class="text-green-400 hidden">
+      ✔ Wiadomość została wysłana!
+    </p>
+
+    <p id="error-msg" class="text-red-400 hidden">
+      ❌ Błąd wysyłki wiadomości.
+    </p>
   </form>
 </section>
 
@@ -177,25 +175,9 @@ section { padding: 60px 20px; }
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
 </audio>
 
-<!-- PARTY BUTTON -->
+<!-- PARTY -->
 <div class="party-btn" onclick="showWarning()" id="partyBtn">
 🎉 PARTY
-</div>
-
-<!-- WARNING -->
-<div id="warning">
-  <div class="modal">
-    <h2 class="text-red-500 font-bold text-xl mb-2">⚠️ Ostrzeżenie</h2>
-
-    <p class="text-gray-300 mb-3">
-      Migające światła mogą być niebezpieczne dla osób z epilepsją lub nadwrażliwością na światło.
-    </p>
-
-    <p class="font-bold mb-3">Czy chcesz kontynuować?</p>
-
-    <button onclick="startParty()" class="bg-green-500 px-4 py-2 rounded m-1">TAK</button>
-    <button onclick="closeWarning()" class="bg-red-500 px-4 py-2 rounded m-1">NIE</button>
-  </div>
 </div>
 
 <script>
@@ -218,23 +200,17 @@ let party = false;
 const music = document.getElementById("music");
 
 function showWarning(){
-  document.getElementById("warning").style.display = "flex";
-}
-
-function closeWarning(){
-  document.getElementById("warning").style.display = "none";
+  if(confirm("⚠️ Migające światła mogą być niebezpieczne. Kontynuować?")){
+    startParty();
+  }
 }
 
 function startParty(){
-  document.getElementById("warning").style.display = "none";
   party = !party;
 
   if(party){
     music.currentTime = 0;
-
-    music.play().then(()=>{}).catch(()=>{
-      alert("Kliknij PARTY jeszcze raz (blokada przeglądarki)");
-    });
+    music.play().catch(()=>{});
 
     document.body.classList.add("party-mode");
     document.getElementById("partyBtn").innerText = "⛔ STOP PARTY";
@@ -242,6 +218,7 @@ function startParty(){
   } else {
     music.pause();
     music.currentTime = 0;
+
     document.body.classList.remove("party-mode");
     document.getElementById("partyBtn").innerText = "🎉 PARTY";
   }
@@ -250,12 +227,36 @@ function startParty(){
 // EMAILJS
 emailjs.init("K-SLWWK5O79YX1-Gi");
 
-document.getElementById("contact-form").addEventListener("submit", function(e){
+const form = document.getElementById("contact-form");
+const successMsg = document.getElementById("success-msg");
+const errorMsg = document.getElementById("error-msg");
+
+form.addEventListener("submit", function(e){
   e.preventDefault();
 
   emailjs.sendForm("service_fbue68f","template_fxzn7el",this)
-    .then(()=>alert("Wiadomość wysłana!"))
-    .catch(()=>alert("Błąd wysyłki"));
+    .then(() => {
+
+      form.reset();
+
+      errorMsg.classList.add("hidden");
+      successMsg.classList.remove("hidden");
+
+      setTimeout(() => {
+        successMsg.classList.add("hidden");
+      }, 4000);
+
+    })
+    .catch(() => {
+
+      successMsg.classList.add("hidden");
+      errorMsg.classList.remove("hidden");
+
+      setTimeout(() => {
+        errorMsg.classList.add("hidden");
+      }, 4000);
+
+    });
 });
 
 </script>
