@@ -164,10 +164,10 @@ body.light .modal {
 <!-- ABOUT -->
 <section id="about" class="max-w-3xl mx-auto text-center">
   <h2 class="text-3xl text-orange-500 font-bold mb-4">O mnie</h2>
-
   <p>
-    Po ukończeniu szkoły chóralnej chciałem pozostać na drodze muzyki i wybrałem DJ-ing.
-    Gram na profesjonalnym sprzęcie, a moje umiejętności są średnio zaawansowane.
+    Po ukończeniu szkoły chóralnej postanowiłem rozwijać swoją pasję do muzyki jako DJ.
+    Zapewniam profesjonalną oprawę muzyczną imprez, pracując na wysokiej klasy sprzęcie
+    i dbając o wyjątkową atmosferę każdego wydarzenia.
   </p>
 </section>
 
@@ -179,7 +179,7 @@ body.light .modal {
 
     <div class="card">
       🎓 Połowinki
-      <button onclick="showDetails('Połowinki','Profesjonalna oprawa muzyczna połowinek: muzyka, światła, prowadzenie imprezy.','Cena: od 120 zł')"
+      <button onclick="showDetails('Połowinki','Profesjonalna oprawa muzyczna połowinek: muzyka, światła, prowadzenie imprezy.','Cena: od 120 zł / godz.')"
         class="mt-3 bg-orange-500 px-3 py-2 rounded">
         Szczegóły
       </button>
@@ -187,7 +187,7 @@ body.light .modal {
 
     <div class="card">
       🎉 Urodziny
-      <button onclick="showDetails('Urodziny','DJ na urodziny: muzyka dopasowana do wieku gości, światła i klimat imprezy.','Cena: od 120 zł')"
+      <button onclick="showDetails('Urodziny','DJ na urodziny: muzyka dopasowana do wieku gości, światła i klimat imprezy.','Cena: od 120 zł / godz.')"
         class="mt-3 bg-orange-500 px-3 py-2 rounded">
         Szczegóły
       </button>
@@ -195,7 +195,7 @@ body.light .modal {
 
     <div class="card">
       👨‍👩‍👧‍👦 Imprezy rodzinne
-      <button onclick="showDetails('Imprezy rodzinne','Muzyka, oświetlenie i prowadzenie rodzinnych wydarzeń.','Cena: od 120 zł')"
+      <button onclick="showDetails('Imprezy rodzinne','Muzyka, oświetlenie i prowadzenie rodzinnych wydarzeń.','Cena: od 120 zł / godz.')"
         class="mt-3 bg-orange-500 px-3 py-2 rounded">
         Szczegóły
       </button>
@@ -203,7 +203,7 @@ body.light .modal {
 
     <div class="card">
       🏫 Dyskoteki szkolne
-      <button onclick="showDetails('Dyskoteki szkolne','Pełna oprawa szkolnych imprez: DJ, muzyka, światła, energia.','Cena: od 120 zł')"
+      <button onclick="showDetails('Dyskoteki szkolne','Pełna oprawa szkolnych imprez: DJ, muzyka, światła, energia.','Cena: od 120 zł / godz.')"
         class="mt-3 bg-orange-500 px-3 py-2 rounded">
         Szczegóły
       </button>
@@ -212,9 +212,22 @@ body.light .modal {
   </div>
 </section>
 
+<!-- EXTRA BOOKING BUTTON -->
+<section class="text-center">
+  <button onclick="openBooking()"
+    class="bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-xl text-lg font-bold">
+    📅 Zarezerwuj termin
+  </button>
+</section>
+
 <!-- CONTACT -->
 <section id="contact" class="max-w-md mx-auto text-center">
   <h2 class="text-3xl text-orange-500 font-bold mb-4">Kontakt</h2>
+
+  <div class="mb-4 p-4 rounded-lg border border-orange-500 bg-orange-500/10 text-sm">
+    ℹ️ Formularz kontaktowy służy wyłącznie do pytań dodatkowych oraz indywidualnych ustaleń.
+    Rezerwacja terminów odbywa się wyłącznie przez przycisk „📅 Zarezerwuj termin”.
+  </div>
 
   <form id="contact-form" class="space-y-3">
     <input name="name" class="w-full p-3 bg-[#111] border border-gray-700 rounded" placeholder="Imię" required>
@@ -225,13 +238,8 @@ body.light .modal {
       Wyślij
     </button>
 
-    <p id="success-msg" class="text-green-400 hidden mt-3">
-      ✔ Wiadomość została wysłana!
-    </p>
-
-    <p id="error-msg" class="text-red-400 hidden mt-3">
-      ❌ Błąd wysyłki wiadomości.
-    </p>
+    <p id="success-msg" class="text-green-400 hidden mt-3">✔ Wiadomość została wysłana!</p>
+    <p id="error-msg" class="text-red-400 hidden mt-3">❌ Błąd wysyłki wiadomości.</p>
   </form>
 </section>
 
@@ -249,20 +257,11 @@ body.light .modal {
 <div id="warning">
   <div class="modal">
     <h2 class="text-red-500 font-bold text-xl mb-2">⚠️ Ostrzeżenie</h2>
-
-    <p class="mb-3">
-      Migające światła mogą być niebezpieczne dla osób z epilepsją.
-    </p>
-
+    <p class="mb-3">Migające światła mogą być niebezpieczne dla osób z epilepsją.</p>
     <p class="font-bold mb-4">Czy chcesz kontynuować?</p>
 
-    <button onclick="startParty()" class="bg-green-500 px-4 py-2 rounded m-1">
-      TAK
-    </button>
-
-    <button onclick="closeWarning()" class="bg-red-500 px-4 py-2 rounded m-1">
-      NIE
-    </button>
+    <button onclick="startParty()" class="bg-green-500 px-4 py-2 rounded m-1">TAK</button>
+    <button onclick="closeWarning()" class="bg-red-500 px-4 py-2 rounded m-1">NIE</button>
   </div>
 </div>
 
@@ -280,7 +279,6 @@ body.light .modal {
 </div>
 
 <script>
-
 // MENU
 function toggleMenu(){
   document.getElementById("menu").classList.toggle("open");
@@ -335,20 +333,16 @@ function closeWarning(){
 function startParty(){
   document.getElementById("warning").style.display = "none";
   party = true;
-
   music.currentTime = 0;
   music.play().catch(()=>{});
-
   document.body.classList.add("party-mode");
   document.getElementById("partyBtn").innerText = "⛔ STOP PARTY";
 }
 
 function stopParty(){
   party = false;
-
   music.pause();
   music.currentTime = 0;
-
   document.body.classList.remove("party-mode");
   document.getElementById("partyBtn").innerText = "🎉 PARTY";
 }
@@ -368,21 +362,14 @@ form.addEventListener("submit", function(e){
       form.reset();
       errorMsg.classList.add("hidden");
       successMsg.classList.remove("hidden");
-
-      setTimeout(() => {
-        successMsg.classList.add("hidden");
-      }, 4000);
+      setTimeout(() => successMsg.classList.add("hidden"), 4000);
     })
     .catch(() => {
       successMsg.classList.add("hidden");
       errorMsg.classList.remove("hidden");
-
-      setTimeout(() => {
-        errorMsg.classList.add("hidden");
-      }, 4000);
+      setTimeout(() => errorMsg.classList.add("hidden"), 4000);
     });
 });
-
 </script>
 
 </body>
