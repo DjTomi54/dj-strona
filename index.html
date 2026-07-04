@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DjTomi</title>
+<title>DjTomi PRO</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
@@ -14,6 +14,7 @@ body {
   background: #0a0a0a;
   color: #b5b5b5;
   font-family: Arial, sans-serif;
+  overflow-x: hidden;
 }
 
 body.light {
@@ -21,10 +22,11 @@ body.light {
   color: #444;
 }
 
+/* tło glow */
 .bg-glow {
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at top, rgba(255,140,0,0.12), transparent 55%);
+  background: radial-gradient(circle at top, rgba(255,140,0,0.15), transparent 60%);
   z-index: -1;
 }
 
@@ -58,20 +60,32 @@ body.light {
   color: orange;
 }
 
+/* SEKCJE */
 section {
-  padding: 60px 20px;
+  padding: 70px 20px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.6s;
 }
 
+section.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* KARTY */
 .card {
   background: #111;
   border: 1px solid #222;
   border-radius: 12px;
   padding: 16px;
+  transition: 0.3s;
 }
 
-body.light .card {
-  background: #fff;
-  border: 1px solid #ddd;
+.card:hover {
+  transform: translateY(-6px);
+  border-color: orange;
+  box-shadow: 0 10px 30px rgba(255,140,0,0.25);
 }
 
 /* PARTY */
@@ -88,6 +102,7 @@ body.light .card {
   animation: strobe 0.8s infinite;
 }
 
+/* BUTTON PARTY */
 .party-btn {
   position: fixed;
   bottom: 20px;
@@ -124,6 +139,17 @@ body.light .modal {
   background: white;
   color: #222;
 }
+
+/* ✨ ANIMACJA LOGO */
+@keyframes glow {
+  0% { text-shadow: 0 0 5px orange; }
+  50% { text-shadow: 0 0 25px orange; }
+  100% { text-shadow: 0 0 5px orange; }
+}
+
+h1 {
+  animation: glow 2s infinite;
+}
 </style>
 </head>
 
@@ -131,7 +157,7 @@ body.light .modal {
 
 <div class="bg-glow"></div>
 
-<!-- MENU -->
+<!-- MENU BUTTON -->
 <button onclick="toggleMenu()" class="fixed top-5 right-5 text-3xl z-50">☰</button>
 
 <!-- THEME -->
@@ -139,10 +165,12 @@ body.light .modal {
 🌗
 </button>
 
+<!-- MENU -->
 <div id="menu" class="menu">
   <h2 class="text-orange-500 font-bold mb-6">DjTomi 🎧</h2>
   <div class="btn" onclick="go('about')">O mnie</div>
   <div class="btn" onclick="go('services')">Usługi</div>
+  <div class="btn" onclick="go('pricing')">Cennik</div>
   <div class="btn" onclick="go('contact')">Kontakt</div>
   <div class="btn" onclick="openBooking()">📅 Rezerwacja</div>
 </div>
@@ -160,15 +188,27 @@ body.light .modal {
     📅 Zarezerwuj termin
   </button>
 </section>
-
 <!-- ABOUT -->
 <section id="about" class="max-w-3xl mx-auto text-center">
   <h2 class="text-3xl text-orange-500 font-bold mb-4">O mnie</h2>
+
   <p>
-    Po ukończeniu szkoły chóralnej postanowiłem rozwijać swoją pasję do muzyki jako DJ.
-    Zapewniam profesjonalną oprawę muzyczną imprez, pracując na wysokiej klasy sprzęcie
-    i dbając o wyjątkową atmosferę każdego wydarzenia.
+    Muzyka towarzyszy mi od wielu lat, a DJ-ing stał się naturalnym kierunkiem rozwoju tej pasji.
+    Podczas wydarzeń dbam o odpowiedni klimat, dobór muzyki oraz płynny przebieg imprezy.
+    Każde zlecenie traktuję indywidualnie, aby dopasować oprawę do charakteru wydarzenia.
   </p>
+</section>
+
+<!-- DLACZEGO JA -->
+<section id="why" class="max-w-3xl mx-auto text-center">
+  <h2 class="text-3xl text-orange-500 font-bold mb-4">Dlaczego ja?</h2>
+
+  <div class="space-y-2">
+    <p>✔ Indywidualne podejście do każdej imprezy</p>
+    <p>✔ Profesjonalne nagłośnienie i oświetlenie</p>
+    <p>✔ Dopasowanie muzyki do gości</p>
+    <p>✔ Stały kontakt przed wydarzeniem</p>
+  </div>
 </section>
 
 <!-- SERVICES -->
@@ -179,40 +219,102 @@ body.light .modal {
 
     <div class="card">
       🎓 Połowinki
-      <button onclick="showDetails('Połowinki','Profesjonalna oprawa muzyczna połowinek: muzyka, światła, prowadzenie imprezy.','Cena: od 120 zł / godz.')"
-        class="mt-3 bg-orange-500 px-3 py-2 rounded">
+      <button onclick="showDetails(
+        'Połowinki',
+        'Profesjonalna oprawa muzyczna połowinek: muzyka, światła, prowadzenie imprezy.',
+        'od 120 zł / godz.'
+      )"
+      class="mt-3 bg-orange-500 px-3 py-2 rounded">
         Szczegóły
       </button>
     </div>
 
     <div class="card">
       🎉 Urodziny
-      <button onclick="showDetails('Urodziny','DJ na urodziny: muzyka dopasowana do wieku gości, światła i klimat imprezy.','Cena: od 120 zł / godz.')"
-        class="mt-3 bg-orange-500 px-3 py-2 rounded">
+      <button onclick="showDetails(
+        'Urodziny',
+        'Muzyka dopasowana do wieku i klimatu imprezy, pełna oprawa DJ + światła.',
+        'od 120 zł / godz.'
+      )"
+      class="mt-3 bg-orange-500 px-3 py-2 rounded">
         Szczegóły
       </button>
     </div>
 
     <div class="card">
       👨‍👩‍👧‍👦 Imprezy rodzinne
-      <button onclick="showDetails('Imprezy rodzinne','Muzyka, oświetlenie i prowadzenie rodzinnych wydarzeń.','Cena: od 120 zł / godz.')"
-        class="mt-3 bg-orange-500 px-3 py-2 rounded">
+      <button onclick="showDetails(
+        'Imprezy rodzinne',
+        'Oprawa muzyczna i prowadzenie wydarzeń rodzinnych.',
+        'od 120 zł / godz.'
+      )"
+      class="mt-3 bg-orange-500 px-3 py-2 rounded">
         Szczegóły
       </button>
     </div>
 
     <div class="card">
       🏫 Dyskoteki szkolne
-      <button onclick="showDetails('Dyskoteki szkolne','Pełna oprawa szkolnych imprez: DJ, muzyka, światła, energia.','Cena: od 120 zł / godz.')"
-        class="mt-3 bg-orange-500 px-3 py-2 rounded">
+      <button onclick="showDetails(
+        'Dyskoteki szkolne',
+        'Energetyczna muzyka, światła i prowadzenie imprezy szkolnej.',
+        'od 120 zł / godz.'
+      )"
+      class="mt-3 bg-orange-500 px-3 py-2 rounded">
         Szczegóły
       </button>
     </div>
 
   </div>
 </section>
+<!-- PRICING -->
+<section id="pricing" class="max-w-4xl mx-auto text-center">
+  <h2 class="text-3xl text-orange-500 font-bold mb-6">Cennik</h2>
 
-<!-- EXTRA BOOKING BUTTON -->
+  <div class="card">
+    <p class="text-lg font-bold">od 120 zł / godzina</p>
+    <p class="mt-2">
+      Każda impreza wyceniana jest indywidualnie w zależności od:
+    </p>
+
+    <div class="mt-3 space-y-1">
+      <p>• czasu trwania wydarzenia</p>
+      <p>• rodzaju imprezy</p>
+      <p>• miejsca realizacji</p>
+      <p>• nagłośnienia i oświetlenia</p>
+    </div>
+
+    <p class="mt-4 text-orange-400">
+      Dokładna cena ustalana jest indywidualnie po kontakcie lub rezerwacji.
+    </p>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="max-w-4xl mx-auto text-center">
+  <h2 class="text-3xl text-orange-500 font-bold mb-6">Statystyki</h2>
+
+  <div class="grid md:grid-cols-3 gap-4">
+
+    <div class="card">
+      <p class="text-3xl font-bold text-orange-500" id="stat1">0</p>
+      <p>Imprez</p>
+    </div>
+
+    <div class="card">
+      <p class="text-3xl font-bold text-orange-500" id="stat2">0</p>
+      <p>Godzin muzyki</p>
+    </div>
+
+    <div class="card">
+      <p class="text-3xl font-bold text-orange-500" id="stat3">0</p>
+      <p>Zadowolonych klientów</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- EXTRA BOOKING -->
 <section class="text-center">
   <button onclick="openBooking()"
     class="bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-xl text-lg font-bold">
@@ -220,13 +322,14 @@ body.light .modal {
   </button>
 </section>
 
-<!-- CONTACT -->
+<!-- CONTACT INFO WARNING -->
 <section id="contact" class="max-w-md mx-auto text-center">
   <h2 class="text-3xl text-orange-500 font-bold mb-4">Kontakt</h2>
 
   <div class="mb-4 p-4 rounded-lg border border-orange-500 bg-orange-500/10 text-sm">
-    ℹ️ Formularz kontaktowy służy wyłącznie do pytań dodatkowych oraz indywidualnych ustaleń.
-    Rezerwacja terminów odbywa się wyłącznie przez przycisk „📅 Zarezerwuj termin”.
+    ℹ️ Formularz kontaktowy NIE służy do rezerwacji terminów.
+    Służy wyłącznie do pytań dodatkowych oraz indywidualnych ustaleń.
+    Rezerwacje wykonuj przez przycisk „📅 Zarezerwuj termin”.
   </div>
 
   <form id="contact-form" class="space-y-3">
@@ -242,18 +345,12 @@ body.light .modal {
     <p id="error-msg" class="text-red-400 hidden mt-3">❌ Błąd wysyłki wiadomości.</p>
   </form>
 </section>
-
-<!-- MUSIC -->
-<audio id="music" loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
-</audio>
-
 <!-- PARTY BUTTON -->
 <div class="party-btn" onclick="handlePartyClick()" id="partyBtn">
 🎉 PARTY
 </div>
 
-<!-- WARNING MODAL -->
+<!-- WARNING -->
 <div id="warning">
   <div class="modal">
     <h2 class="text-red-500 font-bold text-xl mb-2">⚠️ Ostrzeżenie</h2>
@@ -265,7 +362,7 @@ body.light .modal {
   </div>
 </div>
 
-<!-- DETAILS MODAL -->
+<!-- DETAILS -->
 <div id="details">
   <div class="modal">
     <h2 id="d-title" class="text-xl font-bold mb-2 text-orange-500"></h2>
@@ -333,19 +430,46 @@ function closeWarning(){
 function startParty(){
   document.getElementById("warning").style.display = "none";
   party = true;
+
   music.currentTime = 0;
   music.play().catch(()=>{});
+
   document.body.classList.add("party-mode");
   document.getElementById("partyBtn").innerText = "⛔ STOP PARTY";
 }
 
 function stopParty(){
   party = false;
+
   music.pause();
   music.currentTime = 0;
+
   document.body.classList.remove("party-mode");
   document.getElementById("partyBtn").innerText = "🎉 PARTY";
 }
+
+// STATS ANIMATION
+function animateValue(id, start, end, duration){
+  let obj = document.getElementById(id);
+  let range = end - start;
+  let current = start;
+  let increment = end > start ? 1 : -1;
+  let stepTime = Math.abs(Math.floor(duration / range));
+
+  let timer = setInterval(function(){
+    current += increment;
+    obj.innerText = current;
+    if(current == end){
+      clearInterval(timer);
+    }
+  }, stepTime);
+}
+
+window.onload = function(){
+  animateValue("stat1", 0, 120, 2000);
+  animateValue("stat2", 0, 500, 2000);
+  animateValue("stat3", 0, 95, 2000);
+};
 
 // EMAILJS
 emailjs.init("K-SLWWK5O79YX1-Gi");
